@@ -9,6 +9,7 @@ const HASIERATZAILEAK = {
 async function atalaKargatu(izena) {
   const edukiontzia = document.getElementById(`atala-${izena}`);
 
+  
   try {
     const emaitza = await fetch(`templates/${izena}.html`);
     if (!emaitza.ok) throw new Error(`${izena} Ezin izan da kargatu`);
