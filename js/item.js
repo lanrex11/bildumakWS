@@ -1,8 +1,11 @@
 class Item {
   constructor(ApiDatuak) {
-    this.id = ApiDatuak.id;
-    this.izena = ApiDatuak.name;
-    this.irudia = ApiDatuak.image;
+    this.id = crypto.randomUUID();
+    this.izena = ApiDatuak.commonname;
+    this.izenZientifikoa = ApiDatuak.name;
+    this.agentea = ApiDatuak.agent;
+    this.mota = ApiDatuak.type;   //poisonus or deadly
+    this.irudia = ApiDatuak.img;
 
     this.balorazioa = null;
     this.iruzkina = '';
