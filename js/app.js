@@ -1,10 +1,21 @@
 const ATALAK = ['hasiera', 'bilatzaile', 'bilduma', 'kudeatuBilduma'];
 
 const HASIERATZAILEAK = {
-  bilatzaile: () => {},
+  bilatzaile: bilatzaileaHasieratu,
   bilduma: () => {},
   kudeatuBilduma: () => {}
 };
+
+function bilatzaileaHasieratu(){
+  const formularioa = document.getElementById('form-bilatzaile');
+  const inputa = document.getElementById('input-bilaketa');
+  const egoera = document.getElementById('egoera-bilatzen');
+  const emaitzaEremua = document.getElementById('emaitzak-bilaketa');
+
+  formularioa.addEventListener('submit', async (event) => {
+    
+  }
+}
 
 async function atalaKargatu(izena) {
   const edukiontzia = document.getElementById(`atala-${izena}`);

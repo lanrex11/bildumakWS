@@ -2,22 +2,44 @@ const BILDUMA_GAKOA = 'bilduma';
 
 class bildumaStorage {
   static denakLortu() {
-    // TODO
+    const datuak = localStorage.getItem(BILDUMA_GAKOA)
+
+    if (!datuak) {
+      return []
+    }
+
+    return JSON.parse(datuak)
   }
 
   static gorde(item) {
-    // TODO
+    const bilduma = this.denakLortu()
+    const godetzekoa = item.toStorageObject()
+
+    const indizea = bilduma.findIndex(
+      (elem) => elem.id === gordetzekoa.id
+    )
+
+    if (indizea === -1){
+      bilduma.push(gordetzekoa)
+    }else{
+      bilduma[indizea] = gordetzekoa
+    }
+
+    localStorage.setItem(BILDUMA_GAKOA, JSON.stringify(bilduma))
   }
 
   static itemBezalaLortu() {
-    // TODO
+    const bilduma = this.denakLortu()
+    return bilduma.map((obj) => Item.fromStorageObject(obj))
   }
 
   static ezabatu(id) {
-    // TODO
+    const bilduma = this.denakLortu()
+    const bildumaBerria = bilduma.filter((item) => item.id != id)
+    localStorage.setItem(BILDUMA_GAKOA, JSON.stringify(bildumaBerria))
   }
 
   static hustu() {
-    // TODO
+    localStorage.removeItem(BILDUMA_GAKOA)
   }
 }
