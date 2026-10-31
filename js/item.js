@@ -22,10 +22,33 @@ class Item {
   }
 
   toStorageObject() {
-    // TODO
+    return {
+      id: this.id,
+      izena: this.izena,
+      izenZientifikoa: this.izenZientifikoa,
+      agentea: this.agentea,
+      mota: this.mota,
+      irudia: this.irudia,
+      balorazioa: this.balorazioa,
+      iruzkina: this.iruzkina,
+      gordetakoData: this.gordetakoData
+    }
   }
 
   static fromStorageObject(obj) {
-    // TODO
+    const item = new Item({
+      commonname: obj.izena,
+      name: obj.izenZientifikoa,
+      agent: obj.agentea,
+      type: obj.mota,
+      img: obj.irudia
+    });
+
+    item.id = obj.id;
+    item.balorazioa = obj.balorazioa;
+    item.iruzkina = obj.iruzkina;
+    item.gordetakoData = obj.gordetakoData;
+
+    return item;
   }
 }
