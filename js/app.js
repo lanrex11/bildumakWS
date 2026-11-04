@@ -1,3 +1,5 @@
+import { STORAGE_KEYS } from './konstanteak.js';
+
 const ATALAK = ['hasiera', 'bilatzaile', 'bilduma', 'kudeatuBilduma'];
 
 const HASIERATZAILEAK = {
@@ -12,9 +14,17 @@ function bilatzaileaHasieratu(){
   const egoera = document.getElementById('egoera-bilatzen');
   const emaitzaEremua = document.getElementById('emaitzak-bilaketa');
 
-  formularioa.addEventListener('submit', async (event) => {
+  formularioa.addEventListener('submit', event => {
+    //TODO buscar seta con el nombre, desde localStorage
+    //no hace :)
+    const izena = inputa.value.trim();
+    const onddo_guztiak = JSON.parse(localStorage.getItem(STORAGE_KEYS.BILDUMAOSOA));
+    const onddoa = onddo_guztiak.filter(o => o.name.toLowerCase() === izena.toLowerCase());
+    egoera.textContent = "//TODO";
+    console.log("KAIXO")
+
     
-  }
+  })
 }
 
 async function atalaKargatu(izena) {
