@@ -13,7 +13,7 @@ class bildumaStorage {
 
     static gorde(item) {
         const bilduma = this.denakLortu()
-        const godetzekoa = item.toStorageObject()
+        const gordetzekoa = item.toStorageObject()
 
         const indizea = bilduma.findIndex(
             (elem) => elem.id === gordetzekoa.id

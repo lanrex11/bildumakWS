@@ -3,7 +3,7 @@ const API_BASE_URL = 'https://toxicshrooms.vercel.app/api/mushrooms/';
 //mota izan daiteke: 
 // "", 
 // ":type" -> poisonous/deadly 
-// "randomshromm", 
+// "randomshroom", 
 // "randompic"
 
 async function bilatuApi(mota = '') {

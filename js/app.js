@@ -20,6 +20,7 @@ async function bilatzaileaHasieratu() {
 	const inputa = document.getElementById('input-bilaketa');
 	const egoera = document.getElementById('egoera-bilatzen');
 	const emaitzaEremua = document.getElementById('emaitzak-bilaketa');
+	const hautatutakoEremua = document.getElementById('xehetasunak-item')
 
 	//Onddo guztiak lortu localStoragetik eta behar direnekin geratu.
 	formularioa.addEventListener('submit', event => {
@@ -36,9 +37,23 @@ async function bilatzaileaHasieratu() {
 		const onddoak = onddo_guztiak.filter(o => o.name.toLowerCase().includes(izena.toLowerCase()));
 		egoera.textContent="";
 		emaitzaEremua.textContent = "Aurkitu diren onddo kopurua: " + onddo_guztiak.length;
+		let onddoItemList = [];
 		onddo_guztiak.forEach(o => {
 			const i = new Item(o);
-   			emaitzaEremua.insertAdjacentHTML('beforeend', i.toHTML());
+			onddoItemList.push(i);
+			emaitzaEremua.insertAdjacentHTML('beforeend', i.toHTML());
+		})
+
+		const itemcards = document.querySelectorAll(".item-card");
+		console.log(itemcards)
+		itemcards.forEach(item => {
+			item.addEventListener('click', () => {
+				const id = item.dataset.id;
+				const hautatua = onddoItemList.find(o => o.id === id);
+				//ez da event erabili item balioa lehen sortutako htm bakoitza baita, eta guk objektu osoa klikatua izan denean jakin nahi dugu, ez bere azpi elementu bat
+				//.dataset erabili behar da .id soilik ordez, toHml() funtzioan data-id delako div-aren atributua
+				hautatutakoEremua.innerHTML = hautatua.toXehetasunHTML();
+			})
 		})
 	})
 }
@@ -50,7 +65,7 @@ function bildumaHasieratu(){
 
 async function atalaKargatu(izena) {
 	const edukiontzia = document.getElementById(`atala-${izena}`);
-
+	
 
 	try {
 		const emaitza = await fetch(`templates/${izena}.html`);
@@ -121,5 +136,6 @@ document.getElementById('menu-nagusia').addEventListener('click', (event) => {
 	console.log('Botón pulsado:', boton.dataset.seccion);
 	erakutsiAtala(boton.dataset.seccion);
 });
+
 
 jaurtiApp();

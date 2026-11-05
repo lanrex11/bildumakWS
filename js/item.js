@@ -4,7 +4,12 @@ class Item {
     this.izena = ApiDatuak.commonname;
     this.izenZientifikoa = ApiDatuak.name;
     this.agentea = ApiDatuak.agent;
-    this.mota = ApiDatuak.type;   //poisonus or deadly
+    if (ApiDatuak.type === "poisonous"){
+      this.mota = "pozoitsua"
+    }else{
+      this.mota = "hilgarria"
+    }
+    this.distribuzioa = ApiDatuak.distribution;
     this.irudia = ApiDatuak.img;
 
     this.balorazioa = null;
@@ -19,6 +24,20 @@ class Item {
         <h3>${this.izena}</h3>
       </div>
     `;
+  }
+
+  toXehetasunHTML() {
+    return `
+      <div class="item-card" data-id="${this.id}">
+        <img src="${this.irudia}" alt="${this.izena}">
+        <p><strong>Izena:</strong> ${this.izena}</p>
+        <p><strong>Izen zientifikoa:</strong> ${this.izenZientifikoa}</p>
+        <p><strong>Mota:</strong> ${this.mota}</p>
+        <p><strong>Agentea:</strong> ${this.agentea}</p>
+        <p><strong>Distribuzioa:</strong> ${this.distribuzioa}</p>
+      </div>
+    `
+
   }
 
   toStorageObject() {
