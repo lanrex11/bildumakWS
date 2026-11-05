@@ -4,11 +4,18 @@ const ATALAK = ['hasiera', 'bilatzaile', 'bilduma', 'kudeatuBilduma'];
 
 const HASIERATZAILEAK = {
 	bilatzaile: bilatzaileaHasieratu,
-	bilduma: () => {bildumaHasieratu},
+	bilduma: () => bildumaHasieratu,
 	kudeatuBilduma: () => { }
 };
 
-function bilatzaileaHasieratu() {
+async function bilatzaileaHasieratu() {
+	let  onddo_guztiak = await bilatuApi();
+	console.log("ONDOAK: "+onddo_guztiak);
+	console.log(Array.isArray(onddo_guztiak));
+	console.log("ONDOAK: "+onddo_guztiak.length);
+
+
+
 	const formularioa = document.getElementById('form-bilatzaile');
 	const inputa = document.getElementById('input-bilaketa');
 	const egoera = document.getElementById('egoera-bilatzen');
@@ -25,9 +32,14 @@ function bilatzaileaHasieratu() {
 			return;
 		}
 
-		//const onddo_guztiak = JSON.parse(localStorage.getItem(STORAGE_KEYS.BILDUMAOSOA)) || [];
-		//const onddoak = onddo_guztiak.filter(o => o.name.toLowerCase() === izena.toLowerCase());
-		egoera.textContent = "//TODO"; //"Aurkitu diren onddo kopurua: ", + onddoak.lenght;
+		//onddo_guztiak = JSON.parse(localStorage.getItem(STORAGE_KEYS.BILDUMAOSOA)) || [];
+		const onddoak = onddo_guztiak.filter(o => o.name.toLowerCase().includes(izena.toLowerCase()));
+		egoera.textContent="";
+		emaitzaEremua.textContent = "Aurkitu diren onddo kopurua: " + onddo_guztiak.length;
+		onddo_guztiak.forEach(o => {
+			const i = new Item(o);
+   			emaitzaEremua.insertAdjacentHTML('beforeend', i.toHTML());
+		})
 	})
 }
 
