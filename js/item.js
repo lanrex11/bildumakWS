@@ -4,9 +4,9 @@ class Item {
     this.izena = ApiDatuak.commonname;
     this.izenZientifikoa = ApiDatuak.name;
     this.agentea = ApiDatuak.agent;
-    if (ApiDatuak.type === "poisonous"){
+    if (ApiDatuak.type === "poisonous") {
       this.mota = "pozoitsua"
-    }else{
+    } else {
       this.mota = "hilgarria"
     }
     this.distribuzioa = ApiDatuak.distribution;
@@ -36,6 +36,22 @@ class Item {
         <p><strong>Agentea:</strong> ${this.agentea}</p>
         <p><strong>Distribuzioa:</strong> ${this.distribuzioa}</p>
       </div>
+      <div>
+        <form id="form-bildumara">
+          <label>
+            Balorazioa:
+            <input id="balorazioa" type="number" min="1" max="5" required>
+          </label>
+          <br>
+          <label>
+            Iruzkina:
+            <input id="iruzkina" type="text" required></input>
+          </label>
+          <br>
+          <button type="submit">Gehitu bildumara</button>
+        </form>
+      </div>
+
     `
 
   }
