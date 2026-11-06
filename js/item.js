@@ -21,7 +21,7 @@ class Item {
     return `
       <div class="item-card" data-id="${this.id}">
         <img src="${this.irudia}" alt="${this.izena}">
-        <h3>${this.izena}</h3>
+        <h3>${this.izena || this.izenZientifikoa}</h3>
       </div>
     `;
   }
