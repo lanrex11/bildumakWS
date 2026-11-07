@@ -37,23 +37,22 @@ class Item {
         <p><strong>Distribuzioa:</strong> ${this.distribuzioa}</p>
       </div>
       <div>
-        <form id="form-bildumara">
-          <label>
-            Balorazioa:
-            <input id="balorazioa" type="number" min="1" max="5" required>
-          </label>
-          <br>
-          <label>
-            Iruzkina:
-            <input id="iruzkina" type="text" required></input>
-          </label>
-          <br>
-          <button type="submit">Gehitu bildumara</button>
-        </form>
+          <h3>Bildumara gehitu</h3>
+
+          <form id="form-bildumara">
+              <label for="balorazioa"><strong>Balorazioa (1-5):</strong></label>
+              <input id="balorazioa" type="number" min="1" max="5" required>
+              <br><br>
+
+              <label for="iruzkina"><strong>Iruzkina:</strong></label>
+              <br>
+              <input id="iruzkina" type="text" placeholder="Idatzi ezazu iruzkina" required>
+              <br><br>
+
+              <button type="submit">Bildumara gehitu</button>
+          </form>
       </div>
-
     `
-
   }
 
   toStorageObject() {
