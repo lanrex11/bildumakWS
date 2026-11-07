@@ -8,9 +8,11 @@ const HASIERATZAILEAK = {
 	kudeatuBilduma: () => { }
 };
 
-async function bilatzaileaHasieratu() {
+ async function bilatzaileaHasieratu() {
 	//TODO noiz gorde localStorage-ean
-	let onddo_guztiak = await bilatuApi();
+	const onddo_guztiak = await bilatuApi();
+	localStorage.setItem(STORAGE_KEYS.BILDUMAOSOA, JSON.stringify(onddo_guztiak.map(o => new Item(o).toStorageObject())));
+	
 
 	const formularioaBilatzaile = document.getElementById('form-bilatzaile');
 	const inputa = document.getElementById('input-bilaketa');
@@ -26,22 +28,50 @@ async function bilatzaileaHasieratu() {
 		//index.html ez berbidaltzea
 		event.preventDefault();
 
+		//Balio zuzenak direla ikusi
 		const izena = inputa.value.trim();
 		if (izena === '') {
 			egoera.textContent = 'Idatzi izen bat';
 			return;
 		}
+		const gaia = bilAukeraCBox.value;
 
-		//onddo_guztiak = JSON.parse(localStorage.getItem(STORAGE_KEYS.BILDUMAOSOA)) || [];
-		const onddoak = onddo_guztiak.filter(o => o.name.toLowerCase().includes(izena.toLowerCase()));
+		let onddoak = [];
+		switch (gaia) {
+			case 'def':
+				egoera.textContent = 'Aukeratu iragazki bat';
+				return;
+
+			case 'all':
+				onddoak = JSON.parse(localStorage.getItem(STORAGE_KEYS.BILDUMAOSOA)) || [];
+	
+
+				break;
+
+			case 'tox':
+				break;
+
+			case 'dead':
+				break;
+
+			default:
+				egoera.textContent = 'Aukeratu iragazki bat';
+
+
+
+		}
 		egoera.textContent = "";
-		emaitzaEremua.textContent = "Aurkitu diren onddo kopurua: " + onddo_guztiak.length;
+
+		const onddo_filter = onddoak.filter(o => o.izena.toLowerCase().includes(izena.toLowerCase()));
+		emaitzaEremua.textContent = "Aurkitu diren onddo kopurua: " + onddo_filter.length;
 		let onddoItemList = [];
-		onddo_guztiak.forEach(o => {
-			const i = new Item(o);
+		onddo_filter.forEach(o => {
+			const i = Item.fromStorageObject(o)
 			onddoItemList.push(i);
 			emaitzaEremua.insertAdjacentHTML('beforeend', i.toHTML());
 		})
+
+
 
 		const itemcards = document.querySelectorAll(".item-card");
 		console.log(itemcards)

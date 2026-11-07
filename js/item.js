@@ -62,6 +62,7 @@ class Item {
       izenZientifikoa: this.izenZientifikoa,
       agentea: this.agentea,
       mota: this.mota,
+      distribuzioa : this.distribuzioa,
       irudia: this.irudia,
       balorazioa: this.balorazioa,
       iruzkina: this.iruzkina,
@@ -80,6 +81,7 @@ class Item {
 
     item.id = obj.id;
     item.balorazioa = obj.balorazioa;
+    item.distribuzioa = obj.distribuzioa;
     item.iruzkina = obj.iruzkina;
     item.gordetakoData = obj.gordetakoData;
 
