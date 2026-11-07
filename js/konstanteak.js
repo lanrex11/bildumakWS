@@ -1,4 +1,5 @@
 export const STORAGE_KEYS = {
     BILDUMAOSOA: 'bilduma',
-    FABORITOAK: 'faboritoak'
+    FABORITOAK: 'faboritoak',
+    LIGHT_DARK: 'light-dark'
 };

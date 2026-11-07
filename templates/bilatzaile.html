@@ -2,9 +2,18 @@
 
 <section id="bilaketa" class="panel">
   <h3>Bilaketa</h3>
+  <h4>Aukeratu zeren arabera bilatu nahi duzun: </h4>
+  
   <form id="form-bilatzaile">
-    <input type="text" id="input-bilaketa" autocomplete="off" placeholder="Bilatzen...">
-    <button type="submit">Bilatu</button>
+    <select id="bilatu-gaia">
+      <option value="def">Aukeratu...</option>
+      <option value="iz">Izena</option>
+      <option value="tox">Toxikoak</option>
+      <option value="hil">Hilkorrak</option>
+    </select>
+
+      <input type="text" id="input-bilaketa" autocomplete="off" placeholder="Bilatzen...">
+      <button type="submit">Bilatu</button>
   </form>
   <p id="egoera-bilatzen"></p>
 </section>

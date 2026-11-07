@@ -9,19 +9,18 @@ const HASIERATZAILEAK = {
 };
 
 async function bilatzaileaHasieratu() {
+	//TODO noiz gorde localStorage-ean
 	let onddo_guztiak = await bilatuApi();
-	console.log("ONDOAK: " + onddo_guztiak);
-	console.log(Array.isArray(onddo_guztiak));
-	console.log("ONDOAK: " + onddo_guztiak.length);
-
-
 
 	const formularioaBilatzaile = document.getElementById('form-bilatzaile');
 	const inputa = document.getElementById('input-bilaketa');
 	const egoera = document.getElementById('egoera-bilatzen');
 	const emaitzaEremua = document.getElementById('emaitzak-bilaketa');
 	const hautatutakoEremua = document.getElementById('xehetasunak-item')
+	const bilAukeraCBox = document.getElementById('bilatu-gaia');
 
+	
+	
 	//Onddo guztiak lortu localStoragetik eta behar direnekin geratu.
 	formularioaBilatzaile.addEventListener('submit', event => {
 		//index.html ez berbidaltzea
