@@ -91,7 +91,7 @@ main {
 
 #bilaketa,
 #bilduma-kontrolak,
-#ekintzak-kudeatu{
+#ekintzak-kudeatu {
   margin-bottom: 24px;
 }
 
@@ -107,8 +107,11 @@ main {
 }
 
 #panel-hautatua {
-    position: sticky;
-    top: 20px;
+  position: sticky;
+  top: 20px;
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+  box-sizing: border-box;
 }
 
 .panel h3 {

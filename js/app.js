@@ -4,7 +4,7 @@ const ATALAK = ['hasiera', 'bilatzaile', 'bilduma', 'kudeatuBilduma'];
 
 const HASIERATZAILEAK = {
 	bilatzaile: bilatzaileaHasieratu,
-	bilduma: () => bildumaHasieratu,
+	bilduma: bildumaHasieratu,
 	kudeatuBilduma: () => { }
 };
 
@@ -19,8 +19,8 @@ async function bilatzaileaHasieratu() {
 	const hautatutakoEremua = document.getElementById('xehetasunak-item')
 	const bilAukeraCBox = document.getElementById('bilatu-gaia');
 
-	
-	
+
+
 	//Onddo guztiak lortu localStoragetik eta behar direnekin geratu.
 	formularioaBilatzaile.addEventListener('submit', event => {
 		//index.html ez berbidaltzea
@@ -92,7 +92,34 @@ async function bilatzaileaHasieratu() {
 
 function bildumaHasieratu() {
 	const itemak = bildumaStorage.itemBezalaLortu();
-	console.log(itemak);
+	const lista = document.getElementById('lista-bilduma');
+	const select = document.getElementById('onddo-mota');
+
+	function erakutsiItemak() {
+		const aukera = select.value;
+
+		const filtratuak = itemak.filter(item => {
+			if (aukera === '0') return true;
+			if (aukera === '1') return item.mota === 'pozoitsua';
+			if (aukera === '2') return item.mota === 'hilgarria';
+			return false;
+		});
+
+		lista.innerHTML = '';
+
+		if (filtratuak.length === 0) {
+			lista.innerHTML = '<p>Ez dago mota horretako onddorik.</p>';
+			return;
+		}
+
+		filtratuak.forEach(item => {
+			lista.insertAdjacentHTML('beforeend', item.toHTML());
+		});
+	}
+
+	select.addEventListener('change', erakutsiItemak);
+	erakutsiItemak();
+
 }
 
 async function atalaKargatu(izena) {
@@ -127,6 +154,9 @@ function erakutsiAtala(izena) {
 	}
 
 	atala.classList.add('aktiboa');
+	if (izena === 'bilduma') {
+		bildumaHasieratu();
+	}
 
 	console.log('Clases del contenedor:', atala.className);
 	console.log('Contenido:', atala.innerHTML);
