@@ -149,7 +149,7 @@ function bildumaHasieratu() {
 		});
 
 		const itemCards = document.querySelectorAll(".item-card");
-
+		//TODO: itemCards.sort(); balorazioa / izena //ASC, DES
 		itemCards.forEach(item => {
 			item.addEventListener('click', () => {
 				const id = item.dataset.id;
