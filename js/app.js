@@ -10,7 +10,7 @@ const HASIERATZAILEAK = {
 };
 
 async function bilatzaileaHasieratu() {
-	//TODO noiz gorde localStorage-ean
+	//TODO NetworkError kudeatu, bilatzen testua
 	const onddo_guztiak = await bilatuApi();
 	localStorage.setItem(STORAGE_KEYS.GUZTIAK, JSON.stringify(onddo_guztiak.map(o => new Item(o).toStorageObject())));
 
@@ -31,33 +31,29 @@ async function bilatzaileaHasieratu() {
 
 		//Balio zuzenak direla ikusi
 		const izena = inputa.value.trim();
-		if (izena === '') {
-			egoera.textContent = 'Idatzi izen bat';
-			return;
-		}
-		const gaia = bilAukeraCBox.value;
+	
 
-		let onddoak = [];
+		let onddoak = JSON.parse(localStorage.getItem(STORAGE_KEYS.GUZTIAK)) || [];
+
+		const gaia = bilAukeraCBox.value;
 		switch (gaia) {
 			case 'def':
 				egoera.textContent = 'Aukeratu iragazki bat';
 				return;
 
 			case 'all':
-				onddoak = JSON.parse(localStorage.getItem(STORAGE_KEYS.GUZTIAK)) || [];
 				break;
 
 			case 'tox':
+				onddoak = onddoak.filter(o => o.mota === "pozoitsua");
 				break;
 
 			case 'dead':
+				onddoak = onddoak.filter(o => o.mota === "hilgarria");
 				break;
 
 			default:
 				egoera.textContent = 'Aukeratu iragazki bat';
-
-
-
 		}
 		egoera.textContent = "";
 
