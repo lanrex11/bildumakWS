@@ -1,8 +1,9 @@
-const BILDUMA_GAKOA = 'bilduma';
+import { STORAGE_KEYS } from './konstanteak.js';
 
-class bildumaStorage {
+
+export class bildumaStorage {
     static denakLortu() {
-        const datuak = localStorage.getItem(BILDUMA_GAKOA)
+        const datuak = localStorage.getItem(STORAGE_KEYS.BILDUMA_GAKOA)
 
         if (!datuak) {
             return []
@@ -25,7 +26,7 @@ class bildumaStorage {
             bilduma[indizea] = gordetzekoa
         }
 
-        localStorage.setItem(BILDUMA_GAKOA, JSON.stringify(bilduma))
+        localStorage.setItem(STORAGE_KEYS.BILDUMA_GAKOA, JSON.stringify(bilduma))
     }
 
     static itemBezalaLortu() {
@@ -36,10 +37,10 @@ class bildumaStorage {
     static ezabatu(id) {
         const bilduma = this.denakLortu()
         const bildumaBerria = bilduma.filter((item) => item.id != id)
-        localStorage.setItem(BILDUMA_GAKOA, JSON.stringify(bildumaBerria))
+        localStorage.setItem(STORAGE_KEYS.BILDUMA_GAKOA, JSON.stringify(bildumaBerria))
     }
 
     static hustu() {
-        localStorage.removeItem(BILDUMA_GAKOA)
+        localStorage.removeItem(STORAGE_KEYS.BILDUMA_GAKOA)
     }
 }

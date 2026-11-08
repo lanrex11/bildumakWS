@@ -1,4 +1,5 @@
 import { STORAGE_KEYS } from './konstanteak.js';
+import { bildumaStorage } from './bildumaStorage.js'
 
 const ATALAK = ['hasiera', 'bilatzaile', 'bilduma', 'kudeatuBilduma'];
 
@@ -8,11 +9,11 @@ const HASIERATZAILEAK = {
 	kudeatuBilduma: () => { }
 };
 
- async function bilatzaileaHasieratu() {
+async function bilatzaileaHasieratu() {
 	//TODO noiz gorde localStorage-ean
 	const onddo_guztiak = await bilatuApi();
-	localStorage.setItem(STORAGE_KEYS.BILDUMAOSOA, JSON.stringify(onddo_guztiak.map(o => new Item(o).toStorageObject())));
-	
+	localStorage.setItem(STORAGE_KEYS.GUZTIAK, JSON.stringify(onddo_guztiak.map(o => new Item(o).toStorageObject())));
+
 
 	const formularioaBilatzaile = document.getElementById('form-bilatzaile');
 	const inputa = document.getElementById('input-bilaketa');
@@ -43,9 +44,7 @@ const HASIERATZAILEAK = {
 				return;
 
 			case 'all':
-				onddoak = JSON.parse(localStorage.getItem(STORAGE_KEYS.BILDUMAOSOA)) || [];
-	
-
+				onddoak = JSON.parse(localStorage.getItem(STORAGE_KEYS.GUZTIAK)) || [];
 				break;
 
 			case 'tox':
@@ -124,6 +123,9 @@ function bildumaHasieratu() {
 	const itemak = bildumaStorage.itemBezalaLortu();
 	const lista = document.getElementById('lista-bilduma');
 	const select = document.getElementById('onddo-mota');
+	const hautatutakoEremua = document.getElementById('xehetasun-bilduma')
+
+
 
 	function erakutsiItemak() {
 		const aukera = select.value;
@@ -145,10 +147,26 @@ function bildumaHasieratu() {
 		filtratuak.forEach(item => {
 			lista.insertAdjacentHTML('beforeend', item.toHTML());
 		});
+
+		const itemCards = document.querySelectorAll(".item-card");
+
+		itemCards.forEach(item => {
+			item.addEventListener('click', () => {
+				const id = item.dataset.id;
+				const hautatua = filtratuak.find(o => o.id === id);
+				hautatutakoEremua.innerHTML = hautatua.toBildumaHTML();
+			})
+		})
+
 	}
 
 	select.addEventListener('change', erakutsiItemak);
 	erakutsiItemak();
+
+
+
+
+
 
 }
 

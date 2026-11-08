@@ -1,3 +1,4 @@
+
 class Item {
   constructor(ApiDatuak) {
     this.id = crypto.randomUUID();
@@ -51,6 +52,21 @@ class Item {
 
               <button type="submit">Bildumara gehitu</button>
           </form>
+      </div>
+    `
+  }
+
+  toBildumaHTML(){
+    return `
+      <div class="item-card" data-id="${this.id}">
+        <img src="${this.irudia}" alt="${this.izena}">
+        <p><strong>Izena:</strong> ${this.izena}</p>
+        <p><strong>Izen zientifikoa:</strong> ${this.izenZientifikoa}</p>
+        <p><strong>Mota:</strong> ${this.mota}</p>
+        <p><strong>Agentea:</strong> ${this.agentea}</p>
+        <p><strong>Distribuzioa:</strong> ${this.distribuzioa}</p>
+        <p><strong>Balorazioa:</strong> ${this.balorazioa} </p>
+        <p><strong>Iruzkina:</strong> ${this.iruzkina} </p>
       </div>
     `
   }

@@ -1,5 +1,5 @@
 export const STORAGE_KEYS = {
-    BILDUMAOSOA: 'bilduma',
-    FABORITOAK: 'faboritoak',
+    GUZTIAK: 'guztiak',
+    BILDUMA_GAKOA: 'bilduma',
     LIGHT_DARK: 'light-dark'
 };
