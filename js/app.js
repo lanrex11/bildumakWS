@@ -1,12 +1,13 @@
 import { STORAGE_KEYS } from './konstanteak.js';
 import { bildumaStorage } from './bildumaStorage.js'
 
-const ATALAK = ['hasiera', 'bilatzaile', 'bilduma', 'kudeatuBilduma'];
+const ATALAK = ['hasiera', 'bilatzaile', 'bilduma', 'kudeatuBilduma', 'estatistikak'];
 
 const HASIERATZAILEAK = {
 	bilatzaile: bilatzaileaHasieratu,
 	bilduma: bildumaHasieratu,
-	kudeatuBilduma: () => { }
+	kudeatuBilduma: () => { },
+	estatistikak: estatistikakHasieratu
 };
 
 async function bilatzaileaHasieratu() {
@@ -31,7 +32,7 @@ async function bilatzaileaHasieratu() {
 
 		//Balio zuzenak direla ikusi
 		const izena = inputa.value.trim();
-	
+
 
 		let onddoak = JSON.parse(localStorage.getItem(STORAGE_KEYS.GUZTIAK)) || [];
 
@@ -166,6 +167,54 @@ function bildumaHasieratu() {
 
 }
 
+function estatistikakHasieratu() {
+	const itemak = bildumaStorage.itemBezalaLortu();
+	const eremua = document.getElementById('emaitzak-estatistikak');
+
+	if (itemak.length === 0) {
+		eremua.innerHTML = '<p>Oraindik ez duzu onddo-rik gorde </p>';
+	}
+
+	const elemKop = itemak.reduce(kop => kop + 1, 0);
+
+	const balorazioTot = itemak.reduce((acc, i) => acc + i.balorazioa, 0);
+	const balorazioAvg = (balorazioTot / elemKop).toFixed(2);
+
+	const banaketa = itemak.reduce((acc, i) => {
+		acc[i.balorazioa] = (acc[i.balorazioa] || 0) + 1;
+		return acc;
+	}, { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 });
+
+	const motaKop = itemak.reduce((acc, i) => {
+		acc[i.mota] = (acc[i.mota] || 0) + 1;
+		return acc;
+	},{});
+//TODO: onena eta txarrena erakutsi xehetasunekin
+	const onena = itemak.reduce((max,i) => i.balorazioa > max.balorazioa ? i : max);
+	const txarrena = itemak.reduce((min,i) => i.balorazioa < min.balorazioa ? i : min);
+
+	//TODO: banaketa erakutsi eta motaka ondo erakutsi, adibidean bezela
+	const banaketaHTML = Object.entries(banaketa)
+		.map(([bal, kop]) => `<li>${bal} izar: ${kop}</li>`)
+		.join('');
+
+	const motakaHTML = Object.entries(motaKop)
+		.map(([mota, kop]) => `<li>${mota}: ${kop}</li>`)
+		.join('');
+
+	eremua.innerHTML = `
+		<p><strong>Gordetako onddo kopurua:</strong> ${elemKop}</p>
+		<p><strong>Batez besteko balorazioa:</strong> ${balorazioAvg}</p>
+		<p><strong>Balorazio onena:</strong> ${onena.izena} (${onena.balorazioa})</p>
+		<p><strong>Balorazio txarrena:</strong> ${txarrena.izena} (${txarrena.balorazioa})</p>
+		<h3>Balorazioen banaketa</h3>
+		<ul>${banaketaHTML}</ul>
+		<h3>Mota bakoitzeko kopurua</h3>
+		<ul>${motakaHTML}</ul>
+	`;
+
+}
+
 async function atalaKargatu(izena) {
 	const edukiontzia = document.getElementById(`atala-${izena}`);
 
@@ -201,6 +250,9 @@ function erakutsiAtala(izena) {
 	if (izena === 'bilduma') {
 		bildumaHasieratu();
 	}
+	if (izena === 'estatistikak') {
+		estatistikakHasieratu();
+	}
 
 	console.log('Clases del contenedor:', atala.className);
 	console.log('Contenido:', atala.innerHTML);
@@ -214,6 +266,7 @@ function erakutsiAtala(izena) {
 
 	if (boton) boton.classList.add('active');
 }
+
 
 
 /*document.querySelectorAll('.atala').forEach(sec => sec.classList.remove('aktiboa'));
