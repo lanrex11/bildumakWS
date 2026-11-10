@@ -10,12 +10,7 @@ const HASIERATZAILEAK = {
 	estatistikak: estatistikakHasieratu
 };
 
-async function bilatzaileaHasieratu() {
-	//TODO NetworkError kudeatu, bilatzen testua
-	const onddo_guztiak = await bilatuApi();
-	localStorage.setItem(STORAGE_KEYS.GUZTIAK, JSON.stringify(onddo_guztiak.map(o => new Item(o).toStorageObject())));
-
-
+function bilatzaileaHasieratu() {
 	const formularioaBilatzaile = document.getElementById('form-bilatzaile');
 	const inputa = document.getElementById('input-bilaketa');
 	const egoera = document.getElementById('egoera-bilatzen');
@@ -26,13 +21,28 @@ async function bilatzaileaHasieratu() {
 
 
 	//Onddo guztiak lortu localStoragetik eta behar direnekin geratu.
-	formularioaBilatzaile.addEventListener('submit', event => {
+	formularioaBilatzaile.addEventListener('submit', async event => {
+		
 		//index.html ez berbidaltzea
 		event.preventDefault();
 
-		//Balio zuzenak direla ikusi
-		const izena = inputa.value.trim();
+		egoera.textContent = 'Bilatzen...';
 
+		try{
+			egoera.textContent = 'Datuak kargatzen...';	
+			const onddo_guztiak = await bilatuApi();
+			localStorage.setItem(STORAGE_KEYS.GUZTIAK, JSON.stringify(
+				onddo_guztiak.map(o => new Item(o).toStorageObject())));
+			egoera.textContent = '';
+
+		}catch (error) {
+			console.error('Errorea API datuak lortzean:', error);
+			egoera.textContent = 'Ezin izan dira datuak kargatu. Egiaztatu Internet konexioa.';
+			return;
+		}
+
+
+		const izena = inputa.value.trim();
 
 		let onddoak = JSON.parse(localStorage.getItem(STORAGE_KEYS.GUZTIAK)) || [];
 
