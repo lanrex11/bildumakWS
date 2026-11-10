@@ -26,47 +26,55 @@ function bilatzaileaHasieratu() {
 		//index.html ez berbidaltzea
 		event.preventDefault();
 
-		egoera.textContent = 'Bilatzen...';
-
-		try{
-			egoera.textContent = 'Datuak kargatzen...';	
-			const onddo_guztiak = await bilatuApi();
-			localStorage.setItem(STORAGE_KEYS.GUZTIAK, JSON.stringify(
-				onddo_guztiak.map(o => new Item(o).toStorageObject())));
-			egoera.textContent = '';
-
-		}catch (error) {
-			console.error('Errorea API datuak lortzean:', error);
-			egoera.textContent = 'Ezin izan dira datuak kargatu. Egiaztatu Internet konexioa.';
-			return;
-		}
-
-
 		const izena = inputa.value.trim();
 
-		let onddoak = JSON.parse(localStorage.getItem(STORAGE_KEYS.GUZTIAK)) || [];
+		egoera.textContent = 'Bilatzen...';
+
+		
+
 
 		const gaia = bilAukeraCBox.value;
+		let endpoint = "";
+		let storageKey = ""
 		switch (gaia) {
 			case 'def':
 				egoera.textContent = 'Aukeratu iragazki bat';
 				return;
 
 			case 'all':
+				//endpoint = "";
+				storageKey = STORAGE_KEYS.GUZTIAK;
 				break;
 
 			case 'tox':
-				onddoak = onddoak.filter(o => o.mota === "pozoitsua");
+				endpoint = "poisonous";
+				storageKey = STORAGE_KEYS.TOXIKOAK;
 				break;
 
 			case 'dead':
-				onddoak = onddoak.filter(o => o.mota === "hilgarria");
+				endpoint = "deadly";
+				storageKey = STORAGE_KEYS.HILGARRIAK;
 				break;
 
 			default:
 				egoera.textContent = 'Aukeratu iragazki bat';
+				return;
 		}
-		egoera.textContent = "";
+
+		try{
+			egoera.textContent = 'Datuak kargatzen...';	
+			const onddo_guztiak = await bilatuApi(endpoint);
+			localStorage.setItem(storageKey, JSON.stringify(
+				onddo_guztiak.map(o => new Item(o).toStorageObject())));
+			egoera.textContent = '';
+		}catch (error) {
+			console.error('Errorea API datuak lortzean:', error);
+			egoera.textContent = 'Ezin izan dira datuak kargatu. Egiaztatu Internet konexioa.';
+			return;
+		}
+				
+		let onddoak = JSON.parse(localStorage.getItem(storageKey)) || [];
+
 
 		const onddo_filter = onddoak.filter(o => o.izena.toLowerCase().includes(izena.toLowerCase()));
 		emaitzaEremua.textContent = "Aurkitu diren onddo kopurua: " + onddo_filter.length;
