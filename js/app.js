@@ -6,7 +6,7 @@ const ATALAK = ['hasiera', 'bilatzaile', 'bilduma', 'kudeatuBilduma', 'estatisti
 const HASIERATZAILEAK = {
 	bilatzaile: bilatzaileaHasieratu,
 	bilduma: bildumaHasieratu,
-	kudeatuBilduma: () => { },
+	kudeatuBilduma: kudeatuBildumaHasieratu,
 	estatistikak: estatistikakHasieratu
 };
 
@@ -135,13 +135,12 @@ function bilatzaileaHasieratu() {
 }
 
 function bildumaHasieratu() {
-	const itemak = bildumaStorage.itemBezalaLortu();
 	const lista = document.getElementById('lista-bilduma');
 	const bildumaForm = document.getElementById('bilduma-form');
 	const hautatutakoEremua = document.getElementById('xehetasun-bilduma')
 
 	function erakutsiBilduma() {
-		alert("bilduma eguneratu da")
+		const itemak = bildumaStorage.itemBezalaLortu();
 		const onddoMotaSelect = document.getElementById('onddo-mota');
 		const ordenatuSelect = document.getElementById('ordenatu');
 		const norantzaSelect = document.getElementById('norantza');
@@ -197,12 +196,28 @@ function bildumaHasieratu() {
 
 }
 
+function kudeatuBildumaHasieratu() {
+	const botoiaHustu = document.getElementById('botoia-hustu');
+
+	botoiaHustu.addEventListener('click', () => {
+		if (!confirm('Ziur zaude bilduma osoa hustu nahi duzula?')) {
+			return;
+		}
+
+		bildumaStorage.hustu();
+		erakutsiBilduma();
+	});
+
+}
+
+
 function estatistikakHasieratu() {
 	const itemak = bildumaStorage.itemBezalaLortu();
 	const eremua = document.getElementById('emaitzak-estatistikak');
 
 	if (itemak.length === 0) {
 		eremua.innerHTML = '<p>Oraindik ez duzu onddo-rik gorde </p>';
+		return;
 	}
 
 	const elemKop = itemak.reduce(kop => kop + 1, 0);
@@ -277,9 +292,11 @@ function erakutsiAtala(izena) {
 	}
 
 	atala.classList.add('aktiboa');
-	/*if (izena === 'bilduma') {
-		bildumaHasieratu();
-	}*/
+
+	if(izena === 'bilduma'){
+		bildumaHasieratu()
+	}
+
 	if (izena === 'estatistikak') {
 		estatistikakHasieratu();
 	}
