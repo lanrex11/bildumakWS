@@ -136,19 +136,24 @@ function bilatzaileaHasieratu() {
 
 function bildumaHasieratu() {
 	const itemak = bildumaStorage.itemBezalaLortu();
-	const lista = document.getElementById('lista-bilduma');
-	const select = document.getElementById('onddo-mota');
+	const lista = document.getElementById('lista-bilduma');	
+	const bildumaForm = document.getElementById('bilduma-form');
 	const hautatutakoEremua = document.getElementById('xehetasun-bilduma')
 
+	bildumaForm.addEventListener('submit', function erakutsiItemak(event) {
+		alert("sartu naiz")
+		const onddoMotaSelect = document.getElementById('onddo-mota');
+		const ordenatuSelect = document.getElementById('ordenatu');
+		const norantzaSelect = document.getElementById('norantza');
+		
+		//Index-era bidaltzea ekiditu
+		event.preventDefault();
 
-
-	function erakutsiItemak() {
-		const aukera = select.value;
-
+		//Filtratu aukeratutako motaren arabera
 		const filtratuak = itemak.filter(item => {
-			if (aukera === '0') return true;
-			if (aukera === '1') return item.mota === 'pozoitsua';
-			if (aukera === '2') return item.mota === 'hilgarria';
+			if (onddoMotaSelect.value === '0') return true;
+			if (onddoMotaSelect.value === '1') return item.mota === 'pozoitsua';
+			if (onddoMotaSelect.value === '2') return item.mota === 'hilgarria';
 			return false;
 		});
 
@@ -159,12 +164,24 @@ function bildumaHasieratu() {
 			return;
 		}
 
+		//Ordenatu filtratutako elemetuak
+		if(ordenatuSelect.value === "izena"){
+			filtratuak.sort((item1, item2) => (item1.izena || item1.izenZientifikoa)
+			.localeCompare(item2.izena || item2.izenZientifikoa));
+		}else if (ordenatuSelect.value ==="balorazioa"){
+			filtratuak.sort((item1, item2) => item1.balorazioa - item2.balorazioa);	
+		}
+
+		//Ordena --> Defektuz gorakorra
+		if(norantzaSelect.value === "desc"){
+			 //Arraya aldatzen du!!!
+			filtratuak.reverse();
+		}
 		filtratuak.forEach(item => {
 			lista.insertAdjacentHTML('beforeend', item.toHTML());
 		});
 
 		const itemCards = document.querySelectorAll(".item-card");
-		//TODO: itemCards.sort(); balorazioa / izena //ASC, DES
 		itemCards.forEach(item => {
 			item.addEventListener('click', () => {
 				const id = item.dataset.id;
@@ -173,16 +190,8 @@ function bildumaHasieratu() {
 			})
 		})
 
-	}
-
-	select.addEventListener('change', erakutsiItemak);
-	erakutsiItemak();
-
-
-
-
-
-
+	});
+	
 }
 
 function estatistikakHasieratu() {

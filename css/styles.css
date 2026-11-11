@@ -138,18 +138,24 @@ main {
 }
 
 
-#bilduma-kontrolak {
-    display: flex;
-    gap: 20px;
-    align-items: end;
-    flex-wrap: wrap;
-    margin-bottom: 20px;
+#bilduma-kontrolak form {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
+  gap: 12px 20px;
+  align-items: end;
 }
 
-#bilduma-kontrolak div {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    flex: 1;
-    min-width: 130px;
+#bilduma-kontrolak form > div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+#bilduma-kontrolak form select {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+#bilduma-kontrolak form button {
+  justify-self: start;
 }

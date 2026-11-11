@@ -1,40 +1,41 @@
 <h2>Nire Bilduma</h2>
 
 <div id="bilduma-kontrolak" class="panel">
-	<div>
-		<label for="onddo-mota">Onddo Mota</label>
-		<select id="onddo-mota">
-			<option value="0">Guztiak</option>
-			<option value="1">Toxikoak</option>
-			<option value="2">Hilkorrak</option>
-		</select>
-	</div>
+	<form id="bilduma-form" class="Bildumabilatzaile">
 
-	<div>
-		<label for="ordenatu">Ordenatu</label>
-		<select id="ordenatu">
-			<option value="izena">Izena</option>
-			<option value="balorazioa">Balorazioa</option>
-		</select>
-	</div>
+		<div>
+			<label for="onddo-mota">Onddo Mota</label>
+			<select id="onddo-mota">
+				<option value="0">Guztiak</option>
+				<option value="1">Toxikoak</option>
+				<option value="2">Hilkorrak</option>
+			</select>
+		</div>
 
-	<div>
-		<label for="norantza">Norantza</label>
-		<select id="norantza">
-			<option value="asc">Gorakorra</option>
-			<option value="desc">Beherakorra</option>
-		</select>
-	</div>
+		<div class="Bildumabilatzaile">
+			<label for="ordenatu">Ordenatu</label>
+			<select id="ordenatu">
+				<option value="izena">Izena</option>
+				<option value="balorazioa">Balorazioa</option>
+			</select>
+		</div>
 
-
-	
+		<div class="Bildumabilatzaile">
+			<label for="norantza">Norantza</label>
+			<select id="norantza">
+				<option value="asc">Gorakorra</option>
+				<option value="desc">Beherakorra</option>
+			</select>
+		</div>
+		<button type="submit">Bilatu</button>
+	</form>
 </div>
 
 <div class="bilduma-edukiak">
 	<section id="items-bilduma" class="panel">
 		<h3>Gordetako Onddoak</h3>
 		<div id="lista-bilduma">
-			<p>Oraindik ez duzu onddorik gorde.</p>
+			<p id="bildumaSearchStatus">Egin ezazu bilaketa bat</p>
 		</div>
 	</section>
 
@@ -44,5 +45,4 @@
 			<p>Onddo bat aukeratu bere xehetasunak bistaratzeko.</p>
 		</div>
 	</div>
-
 </div>
