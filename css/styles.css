@@ -136,3 +136,20 @@ main {
     grid-template-columns: 1fr;
   }
 }
+
+
+#bilduma-kontrolak {
+    display: flex;
+    gap: 20px;
+    align-items: end;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+#bilduma-kontrolak div {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    flex: 1;
+    min-width: 130px;
+}
