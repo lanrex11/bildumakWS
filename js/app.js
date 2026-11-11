@@ -22,7 +22,7 @@ function bilatzaileaHasieratu() {
 
 	//Onddo guztiak lortu localStoragetik eta behar direnekin geratu.
 	formularioaBilatzaile.addEventListener('submit', async event => {
-		
+
 		//index.html ez berbidaltzea
 		event.preventDefault();
 
@@ -30,7 +30,7 @@ function bilatzaileaHasieratu() {
 
 		egoera.textContent = 'Bilatzen...';
 
-		
+
 
 
 		const gaia = bilAukeraCBox.value;
@@ -61,18 +61,18 @@ function bilatzaileaHasieratu() {
 				return;
 		}
 
-		try{
-			egoera.textContent = 'Datuak kargatzen...';	
+		try {
+			egoera.textContent = 'Datuak kargatzen...';
 			const onddo_guztiak = await bilatuApi(endpoint);
 			localStorage.setItem(storageKey, JSON.stringify(
 				onddo_guztiak.map(o => new Item(o).toStorageObject())));
 			egoera.textContent = '';
-		}catch (error) {
+		} catch (error) {
 			console.error('Errorea API datuak lortzean:', error);
 			egoera.textContent = 'Ezin izan dira datuak kargatu. Egiaztatu Internet konexioa.';
 			return;
 		}
-				
+
 		let onddoak = JSON.parse(localStorage.getItem(storageKey)) || [];
 
 
@@ -136,18 +136,15 @@ function bilatzaileaHasieratu() {
 
 function bildumaHasieratu() {
 	const itemak = bildumaStorage.itemBezalaLortu();
-	const lista = document.getElementById('lista-bilduma');	
+	const lista = document.getElementById('lista-bilduma');
 	const bildumaForm = document.getElementById('bilduma-form');
 	const hautatutakoEremua = document.getElementById('xehetasun-bilduma')
 
-	bildumaForm.addEventListener('submit', function erakutsiItemak(event) {
-		alert("sartu naiz")
+	function erakutsiBilduma() {
+		alert("bilduma eguneratu da")
 		const onddoMotaSelect = document.getElementById('onddo-mota');
 		const ordenatuSelect = document.getElementById('ordenatu');
 		const norantzaSelect = document.getElementById('norantza');
-		
-		//Index-era bidaltzea ekiditu
-		event.preventDefault();
 
 		//Filtratu aukeratutako motaren arabera
 		const filtratuak = itemak.filter(item => {
@@ -165,16 +162,16 @@ function bildumaHasieratu() {
 		}
 
 		//Ordenatu filtratutako elemetuak
-		if(ordenatuSelect.value === "izena"){
+		if (ordenatuSelect.value === "izena") {
 			filtratuak.sort((item1, item2) => (item1.izena || item1.izenZientifikoa)
-			.localeCompare(item2.izena || item2.izenZientifikoa));
-		}else if (ordenatuSelect.value ==="balorazioa"){
-			filtratuak.sort((item1, item2) => item1.balorazioa - item2.balorazioa);	
+				.localeCompare(item2.izena || item2.izenZientifikoa));
+		} else if (ordenatuSelect.value === "balorazioa") {
+			filtratuak.sort((item1, item2) => item1.balorazioa - item2.balorazioa);
 		}
 
 		//Ordena --> Defektuz gorakorra
-		if(norantzaSelect.value === "desc"){
-			 //Arraya aldatzen du!!!
+		if (norantzaSelect.value === "desc") {
+			//Arraya aldatzen du!!!
 			filtratuak.reverse();
 		}
 		filtratuak.forEach(item => {
@@ -189,9 +186,15 @@ function bildumaHasieratu() {
 				hautatutakoEremua.innerHTML = hautatua.toBildumaHTML();
 			})
 		})
+	}
 
+	bildumaForm.addEventListener('submit', event => {
+		event.preventDefault();
+		erakutsiBilduma();
 	});
-	
+
+	erakutsiBilduma();
+
 }
 
 function estatistikakHasieratu() {
@@ -215,10 +218,10 @@ function estatistikakHasieratu() {
 	const motaKop = itemak.reduce((acc, i) => {
 		acc[i.mota] = (acc[i.mota] || 0) + 1;
 		return acc;
-	},{});
-//TODO: onena eta txarrena erakutsi xehetasunekin
-	const onena = itemak.reduce((max,i) => i.balorazioa > max.balorazioa ? i : max);
-	const txarrena = itemak.reduce((min,i) => i.balorazioa < min.balorazioa ? i : min);
+	}, {});
+	//TODO: onena eta txarrena erakutsi xehetasunekin
+	const onena = itemak.reduce((max, i) => i.balorazioa > max.balorazioa ? i : max);
+	const txarrena = itemak.reduce((min, i) => i.balorazioa < min.balorazioa ? i : min);
 
 	//TODO: banaketa erakutsi eta motaka ondo erakutsi, adibidean bezela
 	const banaketaHTML = Object.entries(banaketa)
@@ -274,9 +277,9 @@ function erakutsiAtala(izena) {
 	}
 
 	atala.classList.add('aktiboa');
-	if (izena === 'bilduma') {
+	/*if (izena === 'bilduma') {
 		bildumaHasieratu();
-	}
+	}*/
 	if (izena === 'estatistikak') {
 		estatistikakHasieratu();
 	}
