@@ -56,7 +56,7 @@ class Item {
     `
   }
 
-  toBildumaHTML(){
+  toBildumaHTML() {
     return `
       <div class="item-card" data-id="${this.id}">
         <img src="${this.irudia}" alt="${this.izena}">
@@ -78,7 +78,7 @@ class Item {
       izenZientifikoa: this.izenZientifikoa,
       agentea: this.agentea,
       mota: this.mota,
-      distribuzioa : this.distribuzioa,
+      distribuzioa: this.distribuzioa,
       irudia: this.irudia,
       balorazioa: this.balorazioa,
       iruzkina: this.iruzkina,
@@ -91,7 +91,7 @@ class Item {
       commonname: obj.izena,
       name: obj.izenZientifikoa,
       agent: obj.agentea,
-      type: obj.mota,
+      type: obj.mota === "pozoitsua" ? "poisonous" : "deadly",
       img: obj.irudia
     });
 
