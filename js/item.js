@@ -97,7 +97,20 @@ class Item {
             </form>
         </div>
     `;
-}
+  }
+
+  toRandomHTML() {
+    return `
+      <div class="random-card" data-id="${this.id}">
+        <img src="${this.irudia}" alt="${this.izena}">
+        <p><strong>Izena:</strong> ${this.izena}</p>
+        <p><strong>Izen zientifikoa:</strong> ${this.izenZientifikoa}</p>
+        <p><strong>Mota:</strong> ${this.mota}</p>
+        <p><strong>Agentea:</strong> ${this.agentea}</p>
+        <p><strong>Distribuzioa:</strong> ${this.distribuzioa}</p>
+      </div>
+    `
+  }
 
   toStorageObject() {
     return {

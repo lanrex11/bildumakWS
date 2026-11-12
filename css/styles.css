@@ -67,6 +67,19 @@ main {
   display: block;
 }
 
+.random-card {
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 12px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  width: 100%;
+}
+.random-card img {
+  max-width: 70%;
+  max-height: 250px;
+}
+
 .item-card {
   border: 1px solid #ccc;
   border-radius: 6px;
@@ -123,6 +136,10 @@ main {
   max-height: calc(100vh - 40px);
   overflow-y: auto;
   box-sizing: border-box;
+}
+
+#hasiera-div {
+  display: flex;
 }
 
 .panel h3 {

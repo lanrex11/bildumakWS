@@ -4,6 +4,7 @@ import { bildumaStorage } from './bildumaStorage.js'
 const ATALAK = ['hasiera', 'bilatzaile', 'bilduma', 'kudeatuBilduma', 'estatistikak', 'ezarpenak'];
 
 const HASIERATZAILEAK = {
+	hasiera: hasieratu,
 	bilatzaile: bilatzaileaHasieratu,
 	bilduma: bildumaHasieratu,
 	kudeatuBilduma: kudeatuBildumaHasieratu,
@@ -11,12 +12,38 @@ const HASIERATZAILEAK = {
 	ezarpenak: ezarpenakHasieratu
 };
 
+let hasieraKargatzen = false;
+async function hasieratu() {
+
+	if (hasieraKargatzen) return;
+
+	hasieraKargatzen = true;
+	
+	const hasieraDiv = document.getElementById('hasiera-div');
+	const egoera = document.getElementById('egoera');
+	const ausazkoonddoak =  [];
+	hasieraDiv.innerHTML = '';
+
+	egoera.textContent = 'Kargatzen...';
+	while(ausazkoonddoak.length != 3){
+		const onddoa = await bilatuApi('randomshroom');
+		const itemonddo = new Item(onddoa);
+
+		if (!ausazkoonddoak.find(item => itemonddo.izenZientifikoa === item.izenZientifikoa)){
+			hasieraDiv.insertAdjacentHTML('beforeend', itemonddo.toRandomHTML());
+			ausazkoonddoak.push(itemonddo);
+		}
+	}
+	egoera.textContent = '';
+	hasieraKargatzen = false;
+}
+
 function bilatzaileaHasieratu() {
 	const formularioaBilatzaile = document.getElementById('form-bilatzaile');
 	const inputa = document.getElementById('input-bilaketa');
 	const egoera = document.getElementById('egoera-bilatzen');
 	const emaitzaEremua = document.getElementById('emaitzak-bilaketa');
-	const hautatutakoEremua = document.getElementById('xehetasunak-item')
+	const hautatutakoEremua = document.getElementById('xehetasunak-item');
 	const bilAukeraCBox = document.getElementById('bilatu-gaia');
 
 
@@ -407,12 +434,16 @@ function erakutsiAtala(izena) {
 
 	atala.classList.add('aktiboa');
 
+	if (izena === 'hasiera') {
+		hasieratu();
+	}
+
 	if (izena === 'bilduma') {
-		bildumaHasieratu()
+		bildumaHasieratu();
 	}
 
 	if (izena === 'kudeatuBilduma') {
-		kudeatuBildumaHasieratu()
+		kudeatuBildumaHasieratu();
 	}
 
 	if (izena === 'estatistikak') {
