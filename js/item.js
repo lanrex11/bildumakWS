@@ -71,6 +71,34 @@ class Item {
     `
   }
 
+  toKudeatuHTML() {
+    return `
+        <div class="item-card kudeatu-item" data-id="${this.id}">
+            <h3>${this.izena || this.izenZientifikoa}</h3>
+
+            <form class="form-editatu" data-id="${this.id}">
+                <label>Balorazioa (1-5)</label>
+                <input
+                    name="balorazioa"
+                    type="number"
+                    min="1"
+                    max="5"
+                    value="${this.balorazioa || ''}"
+                    required
+                >
+
+                <label>Iruzkina</label>
+                <textarea name="iruzkina" required>${this.iruzkina || ''}</textarea>
+
+                <button type="submit">Gorde aldaketak</button>
+                <button type="button" class="botoia-ezabatu" data-id="${this.id}">
+                    Ezabatu
+                </button>
+            </form>
+        </div>
+    `;
+}
+
   toStorageObject() {
     return {
       id: this.id,

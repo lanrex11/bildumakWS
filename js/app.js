@@ -139,6 +139,7 @@ function bildumaHasieratu() {
 	const lista = document.getElementById('lista-bilduma');
 	const bildumaForm = document.getElementById('bilduma-form');
 	const hautatutakoEremua = document.getElementById('xehetasun-bilduma')
+	hautatutakoEremua.innerHTML = '<p>Onddo bat aukeratu bere xehetasunak bistaratzeko.</p>';
 
 	function erakutsiBilduma() {
 		const itemak = bildumaStorage.itemBezalaLortu();
@@ -199,6 +200,57 @@ function bildumaHasieratu() {
 
 function kudeatuBildumaHasieratu() {
 	const botoiaHustu = document.getElementById('botoia-hustu');
+	const lista = document.getElementById('lista-kudeatu')
+
+	function erakutsiBilduma() {
+		const itemak = bildumaStorage.itemBezalaLortu();
+
+		lista.innerHTML = '';
+
+		if (itemak.length === 0) {
+			lista.innerHTML = '<p>Oraindik ez du onddorik gorde.</p>';
+			return;
+		}
+
+		itemak.forEach(item => {
+			lista.insertAdjacentHTML('beforeend', item.toKudeatuHTML());
+		});
+
+		lista.querySelectorAll('.form-editatu').forEach(formularioa => {
+			formularioa.addEventListener('submit', event => {
+				event.preventDefault();
+				const id = formularioa.dataset.id;
+
+				const item = itemak.find(elementua =>
+					elementua.id === id
+				);
+
+				item.balorazioa = Number(formularioa.elements.balorazioa.value);
+
+				item.iruzkina = formularioa.elements.iruzkina.value;
+
+				bildumaStorage.gorde(item);
+
+				erakutsiBilduma();
+			});
+		});
+
+		lista.querySelectorAll('.botoia-ezabatu').forEach(botoia => {
+			botoia.addEventListener('click', () => {
+				const id = botoia.dataset.id;
+
+				if (!confirm('Ziur zaude onddo hau ezabatu nahi duzula?')) {
+					return;
+				}
+
+				bildumaStorage.ezabatu(id);
+
+				erakutsiBilduma();
+			});
+		});
+
+	}
+
 
 	botoiaHustu.addEventListener('click', () => {
 		if (!confirm('Ziur zaude bilduma osoa hustu nahi duzula?')) {
@@ -208,6 +260,8 @@ function kudeatuBildumaHasieratu() {
 		bildumaStorage.hustu();
 		erakutsiBilduma();
 	});
+
+	erakutsiBilduma()
 
 }
 
@@ -289,13 +343,13 @@ function moduaKargatu() {
 	moduaEzarri(localStorage.getItem(STORAGE_KEYS.LIGHT_DARK) === 'dark');
 }
 
-function letraEzarri(tamaina){
+function letraEzarri(tamaina) {
 	document.documentElement.style.fontSize = tamaina;
 }
 
-function letraKargatu(){
+function letraKargatu() {
 	const gordeta = localStorage.getItem(STORAGE_KEYS.LETRA_TAMAINA);
-	if(gordeta){
+	if (gordeta) {
 		letraEzarri(gordeta);
 	}
 }
@@ -312,7 +366,7 @@ function ezarpenakHasieratu() {
 		localStorage.setItem(STORAGE_KEYS.LIGHT_DARK, kolorea.checked ? 'dark' : 'light');
 	});
 
-	letra.addEventListener('change', () =>{
+	letra.addEventListener('change', () => {
 		letraEzarri(letra.value);
 		localStorage.setItem(STORAGE_KEYS.LETRA_TAMAINA, letra.value);
 	})
@@ -355,6 +409,10 @@ function erakutsiAtala(izena) {
 
 	if (izena === 'bilduma') {
 		bildumaHasieratu()
+	}
+
+	if (izena === 'kudeatuBilduma') {
+		kudeatuBildumaHasieratu()
 	}
 
 	if (izena === 'estatistikak') {
