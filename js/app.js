@@ -1,13 +1,14 @@
 import { STORAGE_KEYS } from './konstanteak.js';
 import { bildumaStorage } from './bildumaStorage.js'
 
-const ATALAK = ['hasiera', 'bilatzaile', 'bilduma', 'kudeatuBilduma', 'estatistikak'];
+const ATALAK = ['hasiera', 'bilatzaile', 'bilduma', 'kudeatuBilduma', 'estatistikak', 'ezarpenak'];
 
 const HASIERATZAILEAK = {
 	bilatzaile: bilatzaileaHasieratu,
 	bilduma: bildumaHasieratu,
 	kudeatuBilduma: kudeatuBildumaHasieratu,
-	estatistikak: estatistikakHasieratu
+	estatistikak: estatistikakHasieratu,
+	ezarpenak: ezarpenakHasieratu
 };
 
 function bilatzaileaHasieratu() {
@@ -280,6 +281,45 @@ function estatistikakHasieratu() {
 	});
 }
 
+function moduaEzarri(iluna) {
+	document.documentElement.classList.toggle('dark', iluna);
+}
+
+function moduaKargatu() {
+	moduaEzarri(localStorage.getItem(STORAGE_KEYS.LIGHT_DARK) === 'dark');
+}
+
+function letraEzarri(tamaina){
+	document.documentElement.style.fontSize = tamaina;
+}
+
+function letraKargatu(){
+	const gordeta = localStorage.getItem(STORAGE_KEYS.LETRA_TAMAINA);
+	if(gordeta){
+		letraEzarri(gordeta);
+	}
+}
+
+function ezarpenakHasieratu() {
+	const kolorea = document.getElementById('modua-aldatu');
+	const letra = document.getElementById('letra-tamaina');
+
+	kolorea.checked = localStorage.getItem(STORAGE_KEYS.LIGHT_DARK) === 'dark';
+	letra.value = localStorage.getItem(STORAGE_KEYS.LETRA_TAMAINA || '20px');
+
+	kolorea.addEventListener('change', () => {
+		moduaEzarri(kolorea.checked);
+		localStorage.setItem(STORAGE_KEYS.LIGHT_DARK, kolorea.checked ? 'dark' : 'light');
+	});
+
+	letra.addEventListener('change', () =>{
+		letraEzarri(letra.value);
+		localStorage.setItem(STORAGE_KEYS.LETRA_TAMAINA, letra.value);
+	})
+}
+
+
+
 async function atalaKargatu(izena) {
 	const edukiontzia = document.getElementById(`atala-${izena}`);
 
@@ -345,6 +385,8 @@ if (boton) boton.classList.add('active');
 }*/
 
 async function jaurtiApp() {
+	moduaKargatu();
+	letraKargatu();
 	await Promise.all(ATALAK.map(atalaKargatu));
 	erakutsiAtala('hasiera');
 }

@@ -3,5 +3,6 @@ export const STORAGE_KEYS = {
     TOXIKOAK: 'tox',
     HILGARRIAK: 'dead',
     BILDUMA_GAKOA: 'bilduma',
-    LIGHT_DARK: 'light-dark'
+    LIGHT_DARK: 'light-dark',
+    LETRA_TAMAINA: 'letra_tamaina'
 };

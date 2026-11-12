@@ -159,3 +159,7 @@ main {
 #bilduma-kontrolak form button {
   justify-self: start;
 }
+
+:root { --bg: #ffffff; --text: #222222; }
+.dark { --bg: #1e1e1e; --text: #f0f0f0; }
+body { background: var(--bg); color: var(--text); }
