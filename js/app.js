@@ -252,14 +252,14 @@ function kudeatuBildumaHasieratu() {
 	}
 
 
-	botoiaHustu.addEventListener('click', () => {
+	botoiaHustu.onclick = () => {
 		if (!confirm('Ziur zaude bilduma osoa hustu nahi duzula?')) {
 			return;
 		}
 
 		bildumaStorage.hustu();
 		erakutsiBilduma();
-	});
+	};
 
 	erakutsiBilduma()
 
