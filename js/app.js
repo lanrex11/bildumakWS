@@ -214,6 +214,9 @@ function kudeatuBildumaHasieratu() {
 function estatistikakHasieratu() {
 	const itemak = bildumaStorage.itemBezalaLortu();
 	const eremua = document.getElementById('emaitzak-estatistikak');
+	const xehetasunEremua = document.getElementById('xehetasun-estatistikak');
+
+	xehetasunEremua.innerHTML = '<p>Aukeratu onddo bat xehetasunak ikusteko.</p>';
 
 	if (itemak.length === 0) {
 		eremua.innerHTML = '<p>Oraindik ez duzu onddo-rik gorde </p>';
@@ -234,13 +237,12 @@ function estatistikakHasieratu() {
 		acc[i.mota] = (acc[i.mota] || 0) + 1;
 		return acc;
 	}, {});
-	//TODO: onena eta txarrena erakutsi xehetasunekin
+
 	const onena = itemak.reduce((max, i) => i.balorazioa > max.balorazioa ? i : max);
 	const txarrena = itemak.reduce((min, i) => i.balorazioa < min.balorazioa ? i : min);
 
-	//TODO: banaketa erakutsi eta motaka ondo erakutsi, adibidean bezela
 	const banaketaHTML = Object.entries(banaketa)
-		.map(([bal, kop]) => `<li>${bal} izar: ${kop}</li>`)
+		.map(([bal, kop]) => `<li>${'★'.repeat(Number(bal))}: ${kop}</li>`)
 		.join('');
 
 	const motakaHTML = Object.entries(motaKop)
@@ -250,14 +252,32 @@ function estatistikakHasieratu() {
 	eremua.innerHTML = `
 		<p><strong>Gordetako onddo kopurua:</strong> ${elemKop}</p>
 		<p><strong>Batez besteko balorazioa:</strong> ${balorazioAvg}</p>
-		<p><strong>Balorazio onena:</strong> ${onena.izena} (${onena.balorazioa})</p>
-		<p><strong>Balorazio txarrena:</strong> ${txarrena.izena} (${txarrena.balorazioa})</p>
+		<p>
+			<strong>Balorazio onena:</strong>
+			<button type="button" class="estatistika-botoia" data-mota="onena">
+				${onena.izena || onena.izenZientifikoa} (${onena.balorazioa})
+			</button>
+		</p>
+		<p>
+			<strong>Balorazio txarrena:</strong>
+			<button type="button" class="estatistika-botoia" data-mota="txarrena">
+				${txarrena.izena || txarrena.izenZientifikoa} (${txarrena.balorazioa})
+			</button>
+		</p>
 		<h3>Balorazioen banaketa</h3>
 		<ul>${banaketaHTML}</ul>
 		<h3>Mota bakoitzeko kopurua</h3>
 		<ul>${motakaHTML}</ul>
 	`;
 
+	const hautagaiak = { onena, txarrena };
+
+	eremua.querySelectorAll('.estatistika-botoia').forEach(botoia => {
+		botoia.addEventListener('click', () => {
+			const hautatua = hautagaiak[botoia.dataset.mota];
+			xehetasunEremua.innerHTML = hautatua.toBildumaHTML();
+		});
+	});
 }
 
 async function atalaKargatu(izena) {
@@ -293,7 +313,7 @@ function erakutsiAtala(izena) {
 
 	atala.classList.add('aktiboa');
 
-	if(izena === 'bilduma'){
+	if (izena === 'bilduma') {
 		bildumaHasieratu()
 	}
 
