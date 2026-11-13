@@ -385,10 +385,12 @@ function ezarpenakHasieratu() {
 	const kolorea = document.getElementById('modua-aldatu');
 	const letra = document.getElementById('letra-tamaina');
 	const botoiaBerrezarri = document.getElementById('botoia-berrezarri');
+	const toad = document.getElementById('toad-irudia');
 
 
 	kolorea.checked = localStorage.getItem(STORAGE_KEYS.LIGHT_DARK) === 'dark';
 	letra.value = localStorage.getItem(STORAGE_KEYS.LETRA_TAMAINA || '20px');
+	toad.checked = localStorage.getItem(STORAGE_KEYS.TOAD_IRUDIA) !== 'false';
 
 	kolorea.addEventListener('change', () => {
 		moduaEzarri(kolorea.checked);
@@ -400,16 +402,23 @@ function ezarpenakHasieratu() {
 		localStorage.setItem(STORAGE_KEYS.LETRA_TAMAINA, letra.value);
 	});
 
+	toad.addEventListener('change', () => {
+		localStorage.setItem(STORAGE_KEYS.TOAD_IRUDIA, toad.checked ? 'true' : 'false');
+	});
+
 	botoiaBerrezarri.addEventListener('click', () => {
 
 		localStorage.removeItem(STORAGE_KEYS.LIGHT_DARK);
 		localStorage.removeItem(STORAGE_KEYS.LETRA_TAMAINA);
+		localStorage.removeItem(STORAGE_KEYS.TOAD_IRUDIA);
+
 
 		moduaEzarri(false);
 		letraEzarri('16px');
 
 		kolorea.checked = false;
 		letra.value = '16px';
+		toad.checked = true;
 	});
 }
 

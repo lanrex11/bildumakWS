@@ -1,4 +1,5 @@
 
+const IRUDI_GABE = 'https://static.wikia.nocookie.net/nintendo/images/8/87/Champi%C3%B1on.png/revision/latest?cb=20200913221143&path-prefix=es';
 class Item {
   constructor(ApiDatuak) {
     this.id = crypto.randomUUID();
@@ -18,10 +19,21 @@ class Item {
     this.gordetakoData = null;
   }
 
+  irudiaHTML() {
+    const alt = this.izena || this.izenZientifikoa;
+    const toadAktibo = localStorage.getItem('toadIrudia') !== 'false';
+
+    if (!toadAktibo) {
+      return this.irudia ? `<img src="${this.irudia}" alt="${alt}">` : '';
+    }
+
+    return `<img src="${this.irudia || IRUDI_GABE}" alt="${alt}">`;
+  }
+
   toHTML() {
     return `
       <div class="item-card" data-id="${this.id}">
-        <img src="${this.irudia}" alt="${this.izena}">
+        ${this.irudiaHTML()}
         <h3>${this.izena || this.izenZientifikoa}</h3>
       </div>
     `;
@@ -30,7 +42,7 @@ class Item {
   toXehetasunHTML() {
     return `
       <div class="item-card" data-id="${this.id}">
-        <img src="${this.irudia}" alt="${this.izena}">
+        ${this.irudiaHTML()}
         <p><strong>Izena:</strong> ${this.izena}</p>
         <p><strong>Izen zientifikoa:</strong> ${this.izenZientifikoa}</p>
         <p><strong>Mota:</strong> ${this.mota}</p>
@@ -59,7 +71,7 @@ class Item {
   toBildumaHTML() {
     return `
       <div class="item-card" data-id="${this.id}">
-        <img src="${this.irudia}" alt="${this.izena}">
+        ${this.irudiaHTML()}
         <p><strong>Izena:</strong> ${this.izena}</p>
         <p><strong>Izen zientifikoa:</strong> ${this.izenZientifikoa}</p>
         <p><strong>Mota:</strong> ${this.mota}</p>
@@ -102,7 +114,7 @@ class Item {
   toRandomHTML() {
     return `
       <div class="random-card" data-id="${this.id}">
-        <img src="${this.irudia}" alt="${this.izena}">
+       ${this.irudiaHTML()}
         <p><strong>Izena:</strong> ${this.izena}</p>
         <p><strong>Izen zientifikoa:</strong> ${this.izenZientifikoa}</p>
         <p><strong>Mota:</strong> ${this.mota}</p>

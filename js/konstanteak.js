@@ -4,5 +4,6 @@ export const STORAGE_KEYS = {
     HILGARRIAK: 'dead',
     BILDUMA_GAKOA: 'bilduma',
     LIGHT_DARK: 'light-dark',
-    LETRA_TAMAINA: 'letra_tamaina'
+    LETRA_TAMAINA: 'letra_tamaina',
+    TOAD_IRUDIA: 'toadIrudia'
 };
