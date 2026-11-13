@@ -18,18 +18,18 @@ async function hasieratu() {
 	if (hasieraKargatzen) return;
 
 	hasieraKargatzen = true;
-	
+
 	const hasieraDiv = document.getElementById('hasiera-div');
 	const egoera = document.getElementById('egoera');
-	const ausazkoonddoak =  [];
+	const ausazkoonddoak = [];
 	hasieraDiv.innerHTML = '';
 
 	egoera.textContent = 'Kargatzen...';
-	while(ausazkoonddoak.length != 3){
+	while (ausazkoonddoak.length != 3) {
 		const onddoa = await bilatuApi('randomshroom');
 		const itemonddo = new Item(onddoa);
 
-		if (!ausazkoonddoak.find(item => itemonddo.izenZientifikoa === item.izenZientifikoa)){
+		if (!ausazkoonddoak.find(item => itemonddo.izenZientifikoa === item.izenZientifikoa)) {
 			hasieraDiv.insertAdjacentHTML('beforeend', itemonddo.toRandomHTML());
 			ausazkoonddoak.push(itemonddo);
 		}
@@ -384,6 +384,8 @@ function letraKargatu() {
 function ezarpenakHasieratu() {
 	const kolorea = document.getElementById('modua-aldatu');
 	const letra = document.getElementById('letra-tamaina');
+	const botoiaBerrezarri = document.getElementById('botoia-berrezarri');
+
 
 	kolorea.checked = localStorage.getItem(STORAGE_KEYS.LIGHT_DARK) === 'dark';
 	letra.value = localStorage.getItem(STORAGE_KEYS.LETRA_TAMAINA || '20px');
@@ -396,7 +398,19 @@ function ezarpenakHasieratu() {
 	letra.addEventListener('change', () => {
 		letraEzarri(letra.value);
 		localStorage.setItem(STORAGE_KEYS.LETRA_TAMAINA, letra.value);
-	})
+	});
+
+	botoiaBerrezarri.addEventListener('click', () => {
+
+		localStorage.removeItem(STORAGE_KEYS.LIGHT_DARK);
+		localStorage.removeItem(STORAGE_KEYS.LETRA_TAMAINA);
+
+		moduaEzarri(false);
+		letraEzarri('16px');
+
+		kolorea.checked = false;
+		letra.value = '16px';
+	});
 }
 
 
