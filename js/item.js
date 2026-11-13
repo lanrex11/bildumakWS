@@ -19,6 +19,10 @@ class Item {
     this.gordetakoData = null;
   }
 
+  hasImage(){
+    return this.irudia && this.irudia.trim() !== '';
+  }
+
   irudiaHTML() {
     const alt = this.izena || this.izenZientifikoa;
     const toadAktibo = localStorage.getItem('toadIrudia') !== 'false';

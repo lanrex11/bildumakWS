@@ -25,17 +25,24 @@ async function hasieratu() {
 	hasieraDiv.innerHTML = '';
 
 	egoera.textContent = 'Kargatzen...';
-	while (ausazkoonddoak.length != 3) {
-		const onddoa = await bilatuApi('randomshroom');
-		const itemonddo = new Item(onddoa);
+	try {
+		while (ausazkoonddoak.length != 3) {
+			const onddoa = await bilatuApi('randomshroom');
+			const itemonddo = new Item(onddoa);
 
-		if (!ausazkoonddoak.find(item => itemonddo.izenZientifikoa === item.izenZientifikoa)) {
-			hasieraDiv.insertAdjacentHTML('beforeend', itemonddo.toRandomHTML());
-			ausazkoonddoak.push(itemonddo);
+			if (!ausazkoonddoak.find(item => itemonddo.izenZientifikoa === item.izenZientifikoa) && itemonddo.hasImage()) {
+				hasieraDiv.insertAdjacentHTML('beforeend', itemonddo.toRandomHTML());
+				ausazkoonddoak.push(itemonddo);
+			}
 		}
+		egoera.textContent = '';
+		hasieraKargatzen = false;
+
+	}catch (error) {
+		console.error('Errorea API datuak lortzean:', error);
+		hasieraDiv.innerHTML = '<p>Ezin izan dira datuak kargatu. Egiaztatu Internet konexioa.</p>';
+		egoera.textContent = '';
 	}
-	egoera.textContent = '';
-	hasieraKargatzen = false;
 }
 
 function bilatzaileaHasieratu() {
