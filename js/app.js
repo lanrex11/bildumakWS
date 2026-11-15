@@ -38,20 +38,45 @@ async function hasieratu() {
 		egoera.textContent = '';
 		hasieraKargatzen = false;
 
-	}catch (error) {
+	} catch (error) {
 		console.error('Errorea API datuak lortzean:', error);
 		hasieraDiv.innerHTML = '<p>Ezin izan dira datuak kargatu. Egiaztatu Internet konexioa.</p>';
 		egoera.textContent = '';
 	}
 }
 
-function bilatzaileaHasieratu() {
+async function bilatzaileaHasieratu() {
 	const formularioaBilatzaile = document.getElementById('form-bilatzaile');
 	const inputa = document.getElementById('input-bilaketa');
 	const egoera = document.getElementById('egoera-bilatzen');
 	const emaitzaEremua = document.getElementById('emaitzak-bilaketa');
 	const hautatutakoEremua = document.getElementById('xehetasunak-item');
 	const bilAukeraCBox = document.getElementById('bilatu-gaia');
+	const iradokizunak = document.getElementById('iradokizunak-bilaketa');
+
+	//Izenak lortu baldien eta gordeta ez dauden
+	const lStoIzena = localStorage.getItem(STORAGE_KEYS.IZEN_GUZTIAK);
+	if (lStoIzena === null || lStoIzena === "") {
+		try {
+			const onddoak = await bilatuApi();
+			localStorage.setItem(STORAGE_KEYS.IZEN_GUZTIAK, JSON.stringify(
+				onddoak.map(o => ({
+					izena: o.commonname || o.name,
+					mota: o.type
+				}))
+			)
+			);
+		} catch (error) {
+			console.error('Errorea API datuak lortzean:', error);
+			return;
+		}
+	}
+
+	//Iradokizunak
+	inputa.addEventListener('input', iradokizunakErakutsi);
+
+	//Iradokizunak 
+	bilAukeraCBox.addEventListener('change', iradokizunakErakutsi);
 
 
 
@@ -97,6 +122,9 @@ function bilatzaileaHasieratu() {
 		}
 
 		try {
+			//Hau egin hemen
+			//const lStoIzena = localStorage.getItem(STORAGE_KEYS.IZEN_GUZTIAK);
+			//if (lStoIzena === null || lStoIzena === ""){
 			egoera.textContent = 'Datuak kargatzen...';
 			const onddo_guztiak = await bilatuApi(endpoint);
 			localStorage.setItem(storageKey, JSON.stringify(
@@ -167,6 +195,49 @@ function bilatzaileaHasieratu() {
 			})
 		})
 	})
+
+	function iradokizunakErakutsi() {
+
+		const erabTestua = inputa.value.trim().toLowerCase();
+
+			iradokizunak.innerHTML = '';
+			if (erabTestua === '') return;
+
+			const onddoIzenak = JSON.parse(
+				localStorage.getItem(STORAGE_KEYS.IZEN_GUZTIAK)
+			) || [];
+
+			//Iragazia auekratu eta iragazi
+			const gaia = bilAukeraCBox.value;
+			const OnddoHautagaiak = onddoIzenak.filter(o => {
+
+				const izenaCoincide = o.izena &&o.izena.toLowerCase().includes(erabTestua);
+				const motaCoincide = gaia === 'all' || (gaia === 'tox' && o.mota === 'poisonous') ||
+					(gaia === 'dead' && o.mota === 'deadly');
+				return izenaCoincide && motaCoincide;
+			});
+
+			//5 iradokizun maximo aukeratu
+			OnddoHautagaiak.slice(0, 5).forEach(o => {
+
+				const iradokizuna = `
+					<div class="iradokizuna">
+						<p>${o.izena}<p>
+					</div>
+				`;
+
+				iradokizunak.insertAdjacentHTML('beforeend', iradokizuna);
+			});
+
+			// Iradokizunetan klik egitean
+			const iradokizunElementuak = iradokizunak.querySelectorAll('.iradokizuna');
+			iradokizunElementuak.forEach((iradokizuna, index) => {
+				iradokizuna.addEventListener('click', () => {
+					inputa.value = OnddoHautagaiak[index].izena;
+					iradokizunak.innerHTML = '';
+				});
+			});
+	}
 }
 
 function bildumaHasieratu() {

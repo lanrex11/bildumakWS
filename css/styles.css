@@ -191,3 +191,33 @@ main {
 :root { --bg: #ffffff; --text: #222222; }
 .dark { --bg: #1e1e1e; --text: #f0f0f0; }
 body { background: var(--bg); color: var(--text); }
+
+#iradokizunak-bilaketa {
+    width: 100%;
+}
+
+.iradokizuna {
+    padding: 4px;
+    cursor: pointer;
+    border: 1px solid #ddd;
+}
+
+/* Argi modua*/
+body.light .iradokizuna {
+    background-color: white;
+    color: black;
+}
+
+body.light .iradokizuna:hover {
+    background-color: #eee;
+}
+
+/* Modu iluna */
+body.dark .iradokizuna {
+    background-color: #333;
+    color: white;
+}
+
+body.dark .iradokizuna:hover {
+    background-color: #555;
+}
