@@ -236,6 +236,12 @@ async function bilatzaileaHasieratu() {
 				iradokizuna.addEventListener('click', () => {
 					inputa.value = OnddoHautagaiak[index].izena;
 					iradokizunak.innerHTML = '';
+
+					//Gertaera bat eskuz sortu: cancelable jarri preventDefault() erabiltzeko
+					formularioaBilatzaile.dispatchEvent(
+						new Event('submit', { cancelable: true})
+					);
+					
 				});
 			});
 	}
