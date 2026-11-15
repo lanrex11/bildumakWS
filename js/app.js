@@ -39,6 +39,7 @@ async function hasieratu() {
 		hasieraKargatzen = false;
 
 	} catch (error) {
+			hasieraKargatzen = false;
 		console.error('Errorea API datuak lortzean:', error);
 		hasieraDiv.innerHTML = '<p>Ezin izan dira datuak kargatu. Egiaztatu Internet konexioa.</p>';
 		egoera.textContent = '';
