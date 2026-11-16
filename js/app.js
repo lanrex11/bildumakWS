@@ -80,7 +80,7 @@ async function bilatzaileaHasieratu() {
 	//Iradokizunak
 	inputa.addEventListener('input', iradokizunakErakutsi);
 
-	//Iradokizunak 
+	//Iradokizunak iragazia aldatzen bada
 	bilAukeraCBox.addEventListener('change', iradokizunakErakutsi);
 
 
@@ -94,9 +94,6 @@ async function bilatzaileaHasieratu() {
 		const izena = inputa.value.trim();
 
 		egoera.textContent = 'Bilatzen...';
-
-
-
 
 		const gaia = bilAukeraCBox.value;
 		let endpoint = "";
@@ -126,26 +123,33 @@ async function bilatzaileaHasieratu() {
 				return;
 		}
 
-		try {
-			//Hau egin hemen
-			//const lStoIzena = localStorage.getItem(STORAGE_KEYS.IZEN_GUZTIAK);
-			//if (lStoIzena === null || lStoIzena === ""){
-			egoera.textContent = 'Datuak kargatzen...';
-			const onddo_guztiak = await bilatuApi(endpoint);
-			localStorage.setItem(storageKey, JSON.stringify(
-				onddo_guztiak.map(o => new Item(o).toStorageObject())));
-			egoera.textContent = '';
-		} catch (error) {
-			console.error('Errorea API datuak lortzean:', error);
-			egoera.textContent = 'Ezin izan dira datuak kargatu. Egiaztatu Internet konexioa.';
-			return;
+		let onddoak = JSON.parse(localStorage.getItem(storageKey))
+		
+		//Onddoak kargatu localStoragen beharrezkoa bada
+		if(onddoak === null || onddoak === ""){
+			try {
+				//Hau egin hemen
+				//const lStoIzena = localStorage.getItem(STORAGE_KEYS.IZEN_GUZTIAK);
+				//if (lStoIzena === null || lStoIzena === ""){
+				egoera.textContent = 'Datuak kargatzen...';
+				const onddo_guztiak = await bilatuApi(endpoint);
+				localStorage.setItem(storageKey, JSON.stringify(
+					onddo_guztiak.map(o => new Item(o).toStorageObject())));
+				egoera.textContent = '';
+			} catch (error) {
+				console.error('Errorea API datuak lortzean:', error);
+				egoera.textContent = 'Ezin izan dira datuak kargatu. Egiaztatu Internet konexioa.';
+				return;
+			}
 		}
 
-		let onddoak = JSON.parse(localStorage.getItem(storageKey)) || [];
+		onddoak = JSON.parse(localStorage.getItem(storageKey)) || [];
+
 
 
 		const onddo_filter = onddoak.filter(o => o.izena.toLowerCase().includes(izena.toLowerCase()));
 		emaitzaEremua.textContent = "Aurkitu diren onddo kopurua: " + onddo_filter.length;
+		if(onddo_filter.length === 0) egoera.textContent = '' 
 		let onddoItemList = [];
 		onddo_filter.forEach(o => {
 			const i = Item.fromStorageObject(o)
@@ -156,7 +160,6 @@ async function bilatzaileaHasieratu() {
 
 
 		const itemcards = document.querySelectorAll(".item-card");
-		console.log(itemcards)
 		itemcards.forEach(item => {
 			item.addEventListener('click', () => {
 				const id = item.dataset.id;
