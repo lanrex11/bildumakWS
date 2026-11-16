@@ -15,35 +15,39 @@ const HASIERATZAILEAK = {
 let hasieraKargatzen = false;
 async function hasieratu() {
 
-	if (hasieraKargatzen) return;
+    if (hasieraKargatzen) return;
 
-	hasieraKargatzen = true;
+    hasieraKargatzen = true;
 
-	const hasieraDiv = document.getElementById('hasiera-div');
-	const egoera = document.getElementById('egoera');
-	const ausazkoonddoak = [];
-	hasieraDiv.innerHTML = '';
+    const hasieraDiv = document.getElementById('hasiera-div');
+    const egoera = document.getElementById('egoera');
+    hasieraDiv.innerHTML = '';
 
-	egoera.textContent = 'Kargatzen...';
-	try {
-		while (ausazkoonddoak.length != 3) {
-			const onddoa = await bilatuApi('randomshroom');
-			const itemonddo = new Item(onddoa);
+    egoera.textContent = 'Kargatzen...';
+    try {
+        const argazkiak = await Promise.all([
+			bilatuApi('randompic'),
+			bilatuApi('randompic'),
+			bilatuApi('randompic')
+		]);
+        argazkiak.forEach(argazkia => {
+            hasieraDiv.insertAdjacentHTML('beforeend', `
+				      <div class="random-card"">
+						<img src="${argazkia}" alt="Onddoa">
+					</div>`)
+				
+				
+        });
 
-			if (!ausazkoonddoak.find(item => itemonddo.izenZientifikoa === item.izenZientifikoa) && itemonddo.hasImage()) {
-				hasieraDiv.insertAdjacentHTML('beforeend', itemonddo.toRandomHTML());
-				ausazkoonddoak.push(itemonddo);
-			}
-		}
-		egoera.textContent = '';
-		hasieraKargatzen = false;
+        egoera.textContent = '';
+        hasieraKargatzen = false;
 
-	} catch (error) {
-			hasieraKargatzen = false;
-		console.error('Errorea API datuak lortzean:', error);
-		hasieraDiv.innerHTML = '<p>Ezin izan dira datuak kargatu. Egiaztatu Internet konexioa.</p>';
-		egoera.textContent = '';
-	}
+    } catch (error) {
+        hasieraKargatzen = false;
+        console.error('Errorea API datuak lortzean:', error);
+        hasieraDiv.innerHTML = '<p>Ezin izan dira datuak kargatu. Egiaztatu Internet konexioa.</p>';
+        egoera.textContent = '';
+    }
 }
 
 async function bilatzaileaHasieratu() {

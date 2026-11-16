@@ -19,6 +19,7 @@ async function bilatuApi(mota = '') {
     throw new Error('API-arekin errorea')
   }
 
-  return await erantzuna.json()
+  return  (mota !== 'randompic') ?  await erantzuna.json() : 
+    (await erantzuna.text()).trim()
 
 }

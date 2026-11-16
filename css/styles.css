@@ -74,10 +74,12 @@ main {
   margin-bottom: 12px;
   cursor: pointer;
   width: 100%;
+  display: flex;
+  justify-content: center;
+  
 }
 .random-card img {
-  max-width: 70%;
-  max-height: 250px;
+  max-height: 300px;
 }
 
 .item-card {
