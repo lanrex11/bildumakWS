@@ -135,7 +135,6 @@ async function bilatzaileaHasieratu() {
 				const onddo_guztiak = await bilatuApi(endpoint);
 				localStorage.setItem(storageKey, JSON.stringify(
 					onddo_guztiak.map(o => new Item(o).toStorageObject())));
-				egoera.textContent = '';
 			} catch (error) {
 				console.error('Errorea API datuak lortzean:', error);
 				egoera.textContent = 'Ezin izan dira datuak kargatu. Egiaztatu Internet konexioa.';
@@ -143,11 +142,13 @@ async function bilatzaileaHasieratu() {
 			}
 		}
 
+		egoera.textContent = '';
 		onddoak = JSON.parse(localStorage.getItem(storageKey)) || [];
 
 
 
-		const onddo_filter = onddoak.filter(o => o.izena.toLowerCase().includes(izena.toLowerCase()));
+		const onddo_filter = onddoak.filter(o => o.izena.toLowerCase().includes(izena.toLowerCase()) ||
+												 o.izenZientifikoa.toLowerCase().includes(izena.toLowerCase()));
 		emaitzaEremua.textContent = "Aurkitu diren onddo kopurua: " + onddo_filter.length;
 		if(onddo_filter.length === 0) egoera.textContent = '' 
 		let onddoItemList = [];
