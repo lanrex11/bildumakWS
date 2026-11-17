@@ -32,11 +32,26 @@ async function hasieratu() {
 		]);
         argazkiak.forEach(argazkia => {
             hasieraDiv.insertAdjacentHTML('beforeend', `
-				      <div class="random-card"">
+				      <div class="random-card" role="button" tabindex="0" aria-label="Argazkia handitu" aria-expanded="false">
 						<img src="${argazkia}" alt="Onddoa">
 					</div>`)
-				
-				
+
+		    const card = hasieraDiv.lastElementChild;
+		    const handitu = () => {
+		        const handituta = card.classList.toggle('handituta');
+		        card.setAttribute('aria-expanded', String(handituta));
+		        card.setAttribute('aria-label', handituta ? 'Argazkia txikitu' : 'Argazkia handitu');
+		    };
+
+		    card.addEventListener('click', handitu);
+		    card.addEventListener('keydown', event => {
+		        if (event.key === 'Enter' || event.key === ' ') {
+		            event.preventDefault();
+		            handitu();
+		        } else if (event.key === 'Escape' && card.classList.contains('handituta')) {
+		            handitu();
+		        }
+		    });
         });
 
         egoera.textContent = '';
@@ -189,8 +204,13 @@ async function bilatzaileaHasieratu() {
 
 					if (dagoenekoGordeta) return;
 
+					const balorazioaAukeratua = formularioaBilduma.querySelector('input[name="balorazioa"]:checked');
+					if (!balorazioaAukeratua) {
+						formularioaBilduma.reportValidity();
+						return;
+					}
 
-					hautatua.balorazioa = Number(formularioaBilduma.querySelector('#balorazioa').value);
+					hautatua.balorazioa = Number(balorazioaAukeratua.value);
 					hautatua.iruzkina = formularioaBilduma.querySelector('#iruzkina').value.trim();
 					hautatua.gordetakoData = new Date().toISOString();
 
@@ -340,12 +360,18 @@ function kudeatuBildumaHasieratu() {
 			formularioa.addEventListener('submit', event => {
 				event.preventDefault();
 				const id = formularioa.dataset.id;
+				const balorazioaAukeratua = formularioa.querySelector('input[name="balorazioa"]:checked');
+
+				if (!balorazioaAukeratua) {
+					formularioa.reportValidity();
+					return;
+				}
 
 				const item = itemak.find(elementua =>
 					elementua.id === id
 				);
 
-				item.balorazioa = Number(formularioa.elements.balorazioa.value);
+				item.balorazioa = Number(balorazioaAukeratua.value);
 
 				item.iruzkina = formularioa.elements.iruzkina.value;
 
@@ -416,8 +442,15 @@ function estatistikakHasieratu() {
 	const onena = itemak.reduce((max, i) => i.balorazioa > max.balorazioa ? i : max);
 	const txarrena = itemak.reduce((min, i) => i.balorazioa < min.balorazioa ? i : min);
 
+	const balorazioMax = Math.max(1, ...Object.values(banaketa));
 	const banaketaHTML = Object.entries(banaketa)
-		.map(([bal, kop]) => `<li>${'★'.repeat(Number(bal))}: ${kop}</li>`)
+		.reverse()
+		.map(([bal, kop]) => `
+			<li class="balorazio-lerro">
+				<span class="balorazio-etiketa">${bal} <span aria-hidden="true">★</span></span>
+				<progress class="balorazio-barra" max="${balorazioMax}" value="${kop}" aria-label="${bal} izar, ${kop} onddo">${kop}</progress>
+				<span class="balorazio-kopurua">${kop}</span>
+			</li>`)
 		.join('');
 
 	const motakaHTML = Object.entries(motaKop)

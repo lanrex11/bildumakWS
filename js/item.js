@@ -43,6 +43,28 @@ class Item {
     `;
   }
 
+  balorazioaHTML(aukeratuta = null) {
+    const izarrak = [5, 4, 3, 2, 1].map(balorazioa => {
+      const id = `balorazioa-${this.id}-${balorazioa}`;
+      const checked = Number(aukeratuta) === balorazioa ? 'checked' : '';
+
+      return `
+        <input id="${id}" type="radio" name="balorazioa" value="${balorazioa}" ${checked} required>
+        <label for="${id}">
+          <span aria-hidden="true">★</span>
+          <span class="sr-only">${balorazioa} izar</span>
+        </label>
+      `;
+    }).join('');
+
+    return `
+      <fieldset class="balorazio-kontrola">
+        <legend><strong>Balorazioa (1-5):</strong></legend>
+        <div class="izar-hautaketa">${izarrak}</div>
+      </fieldset>
+    `;
+  }
+
   toXehetasunHTML() {
     return `
       <div class="item-card" data-id="${this.id}">
@@ -57,9 +79,7 @@ class Item {
           <h3>Bildumara gehitu</h3>
 
           <form id="form-bildumara">
-              <label for="balorazioa"><strong>Balorazioa (1-5):</strong></label>
-              <input id="balorazioa" type="number" min="1" max="5" required>
-              <br><br>
+              ${this.balorazioaHTML()}
 
               <label for="iruzkina"><strong>Iruzkina:</strong></label>
               <br>
@@ -93,15 +113,7 @@ class Item {
             <h3>${this.izena || this.izenZientifikoa}</h3>
 
             <form class="form-editatu" data-id="${this.id}">
-                <label>Balorazioa (1-5)</label>
-                <input
-                    name="balorazioa"
-                    type="number"
-                    min="1"
-                    max="5"
-                    value="${this.balorazioa || ''}"
-                    required
-                >
+                ${this.balorazioaHTML(this.balorazioa)}
 
                 <label>Iruzkina</label>
                 <textarea name="iruzkina" required>${this.iruzkina || ''}</textarea>
