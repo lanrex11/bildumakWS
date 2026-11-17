@@ -74,6 +74,22 @@ html.dark body {
     repeating-linear-gradient(117deg, transparent 0 7px, rgba(240, 230, 200, 0.018) 7px 8px);
 }
 
+#jan-kaleidoskopioa {
+  position: fixed;
+  z-index: 999;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #090d0a;
+  cursor: pointer;
+  animation: kaleidoskopioa-sartu 500ms ease both;
+}
+
+@keyframes kaleidoskopioa-sartu {
+  from { opacity: 0; }
+  to   { opacity: 0.94; }
+}
+
 ::selection {
   color: var(--forest-950);
   background: var(--ochre-300);
@@ -595,6 +611,11 @@ html.dark .iradokizuna:hover {
   transform: translateY(-3px);
   border-color: rgba(196, 134, 62, 0.62);
   box-shadow: 0 12px 24px rgba(37, 45, 28, 0.13), 0 0 17px rgba(223, 180, 107, 0.09);
+}
+
+.jan-botoia {
+  margin-top: 4px;
+  background: linear-gradient(115deg, var(--rust-500), var(--ochre-500));
 }
 
 .item-card.hautatua {

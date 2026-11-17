@@ -43,6 +43,16 @@ class Item {
     `;
   }
 
+  toBildumaTxartelaHTML() {
+    return `
+      <div class="item-card" data-id="${this.id}">
+        ${this.irudiaHTML()}
+        <h3>${this.izena || this.izenZientifikoa}</h3>
+        <button type="button" class="jan-botoia">Jan</button>
+      </div>
+    `;
+  }
+
   balorazioaHTML(aukeratuta = null) {
     const izarrak = [5, 4, 3, 2, 1].map(balorazioa => {
       const id = `balorazioa-${this.id}-${balorazioa}`;

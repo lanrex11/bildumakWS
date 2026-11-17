@@ -6,5 +6,6 @@ export const STORAGE_KEYS = {
     BILDUMA_GAKOA: 'bilduma',
     LIGHT_DARK: 'light-dark',
     LETRA_TAMAINA: 'letra_tamaina',
-    TOAD_IRUDIA: 'toadIrudia'
+    TOAD_IRUDIA: 'toadIrudia',
+    JAN_AVISO: 'janAviso'
 };

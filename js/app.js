@@ -13,6 +13,146 @@ const HASIERATZAILEAK = {
 };
 
 let hasieraKargatzen = false;
+let janEfektuTenporizadorea;
+let janEfektuAnimazioa = null;
+
+function janEfektuaGelditu() {
+	const root = document.documentElement;
+	const oharra = document.getElementById('jan-oharra');
+	const canvas = document.getElementById('jan-kaleidoskopioa');
+
+	window.clearTimeout(janEfektuTenporizadorea);
+	if (janEfektuAnimazioa) {
+		window.cancelAnimationFrame(janEfektuAnimazioa);
+		janEfektuAnimazioa = null;
+	}
+	if (canvas) canvas.remove();
+	if (oharra) oharra.hidden = true;
+	root.classList.remove('jan-efektua-aktiboa');
+	document.removeEventListener('keydown', janEfektuaEscape);
+}
+
+function janEfektuaEscape(e) {
+	if (e.key === 'Escape') janEfektuaGelditu();
+}
+
+function janEfektuaAktibatu() {
+	if (localStorage.getItem(STORAGE_KEYS.JAN_AVISO) !== 'false') {
+		const jarraitu = window.confirm(
+			'KONTUZ: ikusmen-efektu bizidun honek ondoeza edo krisiak eragin ditzake epilepsia fotosentikorra duten pertsonengan. Jarraitu nahi duzu? Ezeztatzeak aktibatzea saihestuko du.'
+		);
+		if (!jarraitu) return;
+	}
+
+	const root = document.documentElement;
+
+	// Aviso
+	let oharra = document.getElementById('jan-oharra');
+	if (!oharra) {
+		oharra = document.createElement('div');
+		oharra.id = 'jan-oharra';
+		oharra.setAttribute('role', 'status');
+		oharra.setAttribute('aria-live', 'polite');
+		root.appendChild(oharra);
+	}
+	oharra.hidden = false;
+
+	// Canvas del caleidoscopio
+	janEfektuaGelditu();
+	oharra.hidden = false;
+	root.classList.add('jan-efektua-aktiboa');
+
+	const canvas = document.createElement('canvas');
+	canvas.id = 'jan-kaleidoskopioa';
+	canvas.setAttribute('aria-hidden', 'true');
+	canvas.addEventListener('click', janEfektuaGelditu);
+	root.insertBefore(canvas, oharra);
+	document.addEventListener('keydown', janEfektuaEscape);
+
+	const ctx = canvas.getContext('2d');
+	const RAMPA = ' .:-=+*#%@';
+	const SEKTOREAK = 6; // simetría hexagonal
+	const SEKTORE_ANGELUA = (Math.PI * 2) / SEKTOREAK;
+	const FONT_TAMAINA = 14;
+	const mugatuaMugimendua = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+	let zabalera = 0, altuera = 0, zutabeak = 0, errenkadak = 0, zelulaZ = 0, zelulaA = 0;
+
+	function neurriak() {
+		const dpr = window.devicePixelRatio || 1;
+		zabalera = window.innerWidth;
+		altuera = window.innerHeight;
+		canvas.width = zabalera * dpr;
+		canvas.height = altuera * dpr;
+		ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+		ctx.font = `${FONT_TAMAINA}px "DM Mono", monospace`;
+		ctx.textBaseline = 'alphabetic';
+		zelulaZ = ctx.measureText('M').width;
+		zelulaA = FONT_TAMAINA * 1.05;
+		zutabeak = Math.ceil(zabalera / zelulaZ);
+		errenkadak = Math.ceil(altuera / zelulaA);
+	}
+
+	function marraztu(ms) {
+		if (zabalera !== window.innerWidth || altuera !== window.innerHeight) neurriak();
+
+		const t = ms / 1000;
+		const eskala = Math.min(zabalera, altuera) / 1.6;
+
+		ctx.fillStyle = 'rgba(9, 13, 10, 0.86)'; // estela suave
+		ctx.fillRect(0, 0, zabalera, altuera);
+
+		for (let j = 0; j < errenkadak; j++) {
+			for (let i = 0; i < zutabeak; i++) {
+				const dx = (i - zutabeak / 2) * zelulaZ / eskala;
+				const dy = (j - errenkadak / 2) * zelulaA / eskala;
+				const r = Math.hypot(dx, dy);
+
+				// Plegado del ángulo: espejo en cada sector
+				let a = Math.atan2(dy, dx) + t * 0.3;
+				a = ((a % SEKTORE_ANGELUA) + SEKTORE_ANGELUA) % SEKTORE_ANGELUA;
+				a = Math.abs(a - SEKTORE_ANGELUA / 2);
+
+				const px = r * Math.cos(a);
+				const py = r * Math.sin(a);
+
+				const v =
+					(Math.sin(px * 7 + t * 1.4) +
+						Math.sin(py * 9 - t) +
+						Math.sin(r * 11 - t * 2.2) +
+						Math.sin((px + py) * 5 + t * 0.7)) / 8 + 0.5;
+
+				const k = Math.max(0, Math.min(RAMPA.length - 1, Math.floor(v * RAMPA.length)));
+				if (k === 0) continue;
+
+				ctx.fillStyle = `hsl(${(v * 300 + t * 60) % 360} 90% ${38 + v * 32}%)`;
+				ctx.fillText(RAMPA[k], i * zelulaZ, (j + 1) * zelulaA);
+			}
+		}
+	}
+
+	neurriak();
+
+	if (mugatuaMugimendua) {
+		// Sin animación: un único fotograma estático
+		ctx.fillStyle = '#090d0a';
+		ctx.fillRect(0, 0, zabalera, altuera);
+		marraztu(6000);
+	} else {
+		const hasiera = performance.now();
+		const FPS_tartea = 1000 / 30;
+		let azkena = 0;
+		const begizta = (orain) => {
+			if (orain - azkena >= FPS_tartea) {
+				azkena = orain;
+				marraztu(orain - hasiera);
+			}
+			janEfektuAnimazioa = window.requestAnimationFrame(begizta);
+		};
+		janEfektuAnimazioa = window.requestAnimationFrame(begizta);
+	}
+
+	janEfektuTenporizadorea = window.setTimeout(janEfektuaGelditu, 13000);
+}
 async function hasieratu() {
 
     if (hasieraKargatzen) return;
@@ -316,7 +456,14 @@ function bildumaHasieratu() {
 			filtratuak.reverse();
 		}
 		filtratuak.forEach(item => {
-			lista.insertAdjacentHTML('beforeend', item.toHTML());
+			lista.insertAdjacentHTML('beforeend', item.toBildumaTxartelaHTML());
+		});
+
+		lista.querySelectorAll('.jan-botoia').forEach(botoia => {
+			botoia.addEventListener('click', event => {
+				event.stopPropagation();
+				janEfektuaAktibatu();
+			});
 		});
 
 		const itemCards = document.querySelectorAll(".item-card");
@@ -512,11 +659,13 @@ function ezarpenakHasieratu() {
 	const letra = document.getElementById('letra-tamaina');
 	const botoiaBerrezarri = document.getElementById('botoia-berrezarri');
 	const toad = document.getElementById('toad-irudia');
+	const avisoJan = document.getElementById('aviso-jan');
 
 
 	kolorea.checked = localStorage.getItem(STORAGE_KEYS.LIGHT_DARK) === 'dark';
 	letra.value = localStorage.getItem(STORAGE_KEYS.LETRA_TAMAINA || '20px');
 	toad.checked = localStorage.getItem(STORAGE_KEYS.TOAD_IRUDIA) !== 'false';
+	avisoJan.checked = localStorage.getItem(STORAGE_KEYS.JAN_AVISO) !== 'false';
 
 	kolorea.addEventListener('change', () => {
 		moduaEzarri(kolorea.checked);
@@ -532,11 +681,16 @@ function ezarpenakHasieratu() {
 		localStorage.setItem(STORAGE_KEYS.TOAD_IRUDIA, toad.checked ? 'true' : 'false');
 	});
 
+	avisoJan.addEventListener('change', () => {
+		localStorage.setItem(STORAGE_KEYS.JAN_AVISO, avisoJan.checked ? 'true' : 'false');
+	});
+
 	botoiaBerrezarri.addEventListener('click', () => {
 
 		localStorage.removeItem(STORAGE_KEYS.LIGHT_DARK);
 		localStorage.removeItem(STORAGE_KEYS.LETRA_TAMAINA);
 		localStorage.removeItem(STORAGE_KEYS.TOAD_IRUDIA);
+		localStorage.removeItem(STORAGE_KEYS.JAN_AVISO);
 
 
 		moduaEzarri(false);
@@ -545,6 +699,7 @@ function ezarpenakHasieratu() {
 		kolorea.checked = false;
 		letra.value = '16px';
 		toad.checked = true;
+		avisoJan.checked = true;
 	});
 }
 
